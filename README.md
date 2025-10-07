@@ -1,2 +1,65 @@
-# solitaire
-Solitaire Game for the Browser
+# Project 1 - Solitaire (Klondike)
+*Student:* Justin Clark
+Build a browser-based Klondike Solitaire game.
+
+## MVP Game Version Requirements
+The following is an outline of the basic game play mechanics and the basic user interface. The MVP version of the game will fulfill these basics.
+
+### Game Basics
+#### Objective
+The goal of Klondike is to move all the cards into four foundation piles creating one pile per suit in ascending order from Ace up to King.
+#### Foundation Piles
+To start a foundation pile, place an Ace in the foundation and then add cards of the same suit in ascending order: A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K.
+#### Columns
+Move cards to the foundation or another column to create stacks and uncover face-down cards.
+Stacks must alternate between red and black suits and be in descending order: K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2.
+#### Empty Columns
+Empty columns are created when you move the last card from a column.
+Only Kings may be moved to an empty column.
+#### Stock Pile
+Click the stock pile to draw more cards. You draw one card at a time.
+#### Drawn Cards Pile
+As cards are drawn from stock pile, they are placed face up in the drawn cards pile. Move cards one at a time from the drawn cards pile to an available space in a foundation pile, column, or empty column.
+
+### Scoring
+#### Scoring
+In Standard Klondike, earn 10 points for moving cards to the foundation, and 5 points for uncovering face-down cards or moving cards from the stock pile.
+#### Bonus Points
+Complete the game quickly to earn bonus points! Bonus points are calculated by dividing 700,000 by the total game in seconds.
+
+### Controls
+#### Mouse Controls
+Click and drag cards to a specific destination. To move a stack of cards, click and drag the top-most card.
+
+### Interface
+#### New Game Button
+Start a new game of Klondike. 
+#### End Game Button
+Ends the current game of Klondike.
+#### Score
+Displays the score for the current game.
+#### Time
+Indicates how long you have been playing the current game for.
+#### Game Rules
+Displays the rules of the game.
+#### Table
+Consists of the Stock Pile, Drawn Cards Pile, Foundation Piles, and Columns.
+#### Cards
+Cards consist of a standard deck of 52 cards.
+
+## Level-Ups
+### Level-Up 1
+#### Modal
+Use a modal to display the game rules.
+#### Responsive Navigation
+A navigation bar that on desktop runs across the top of the page, but in mobile appears on the side when the user clicks on an icon.
+#### Theme Toggle
+A button that toggles a light/dark theme.
+#### Single Page Application
+Instead of having multiple HTML files for each page of the website, load all the content for the website into one HTML file and hide/show different parts of the page using JS Events/DOM Manipulation.
+#### Animation
+Animate moving cards from the stock pile to the drawn pile.
+
+### Level-Up 2
+#### Pexels API
+Use Pexels API to get new images to put on the back of cards.
