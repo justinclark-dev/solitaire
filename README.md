@@ -49,15 +49,15 @@ Cards consist of a standard deck of 52 cards.
 
 ## Level-Ups
 ### Level-Up 1
-#### Modal
+#### 1. Modal
 Use a modal to display the game rules.
-#### Responsive Navigation
+#### 2. Responsive Navigation
 A navigation bar that on desktop runs across the top of the page, but in mobile appears on the side when the user clicks on an icon.
-#### Theme Toggle
+#### 3. Theme Toggle
 A button that toggles a light/dark theme.
-#### Single Page Application
+#### 4. Single Page Application
 Instead of having multiple HTML files for each page of the website, load all the content for the website into one HTML file and hide/show different parts of the page using JS Events/DOM Manipulation.
-#### Animation
+#### 5. Animation
 Animate moving cards from the stock pile to the drawn pile.
 
 ### Level-Up 2
