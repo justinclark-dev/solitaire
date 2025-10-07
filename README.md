@@ -47,6 +47,19 @@ Consists of the Stock Pile, Drawn Cards Pile, Foundation Piles, and Columns.
 #### Cards
 Cards consist of a standard deck of 52 cards.
 
+### Five DOM Interactions for MVP
+
+#### 1. New Game Button Click
+Starts a new game. Sets the table up for a new game. Clears the table if a current game is being played. All game data will be reset when clicked. Time Playing (stopwatch) will start counting from 0:00. Cards will be randomly shuffled and the game will initialize a new deal.
+#### 2. Game Rules Button Click
+Displays a hiddend div with game instructions.
+#### 3. Stock Pile Click
+Moves a face-down card from the stock pile to face-up on the drawn cards pile.
+#### 4. Card Click
+Moves a card to the appropriate pile (by suit) in the foundation piles if that card is next in rank for that pile, e.g. clicking an Ace will move the card to the pile for the suit in the foundation pile and then so on for cards of the same suit in ascending order: A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K.
+#### 5. Card Drag (& Release)
+Clicking and holding the click button will allow the card to be moved in position to an appropriate column or pile, the when the mouse button is released the card will be added to the hover target if allowed.  If released when not over an appropriate target, the card will move back to its place of origination.
+
 ## Level-Ups
 ### Level-Up 1
 #### 1. Modal
