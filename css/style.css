@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Allura|Liu+Jian+Mao+Cao&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:wght@100&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Allura|Liu+Jian+Mao+Cao&display=swap");
 
 * {
     margin: 0;
@@ -37,7 +38,16 @@ body {
     padding: 0;
 }
 
+#signature {
+    font-family: 'Allura', cursive;
+    font-size: 1.5em;
+}
 
+footer {
+    position: fixed;
+    bottom: 0;
+
+}
 
 h1 {
     font-size: 7em;
@@ -52,6 +62,7 @@ button {
     background-color: #333;
     color: #eee;
 }
+
 nav {
     background-color: #111;
     display: flex;
@@ -60,16 +71,20 @@ nav {
     margin-top: 0;
     padding: 1em;
 }
+
 nav .left-nav {
     margin-left: 2em;
 }
+
 nav .right-nav {
     margin-right: 2em;
 }
+
 nav .center-nav {
     display: flex;
     gap: 1em;
 }
+
 nav .center-nav div {
     color: lime;
 }
@@ -118,9 +133,10 @@ main {
     grid-template-rows: 1fr;
     /* justify-content: space-between; */
 }
+
 .stock-pile-container {
     position: relative;
-    
+
     /* height: 100px;
     width: 300px; */
 
@@ -129,19 +145,32 @@ main {
     grid-template-rows: 1fr;
     gap: 60px
 }
+.stock-pile-container .back:nth-of-type(1n+1) {
+    /* margin: -51px; */
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
 
 
 #drawn-pile {
     /* margin-left: 150px; */
+    position: relative;
 }
-.back:nth-of-type(1n+1) {
-    /* margin: -51px; */
-    
-    position: absolute;
+#drawn-pile .card {
+position: absolute;
     top: 0;
     left: 0;
-   
 }
+#drawn-pile > .card:nth-last-child(-n + 2)  {   
+    margin-left: 1em;
+}
+#drawn-pile > .card:nth-last-child(-n + 1)  {   
+    margin-left: 2em;
+}
+
 
 
 
@@ -152,7 +181,8 @@ main {
     gap: 60px;
     justify-self: end;
 }
-.foundation > div {
+
+.foundation>div {
     height: 150px;
     width: 120px;
 }
@@ -163,3 +193,23 @@ main {
     gap: 60px;
 }
 
+/*
+
+    drawn pile
+        show top 3 cards staggered atop eachother
+
+    selected card(s)
+        show blue lighted outline effect
+        give raised card effect
+            offset -top & -left
+            offset shadow
+
+    dragging effect (optional)
+        hide card's original location
+            until moved or moved back
+
+*/
+
+#clubs {
+    border: 5px solid gold;
+}

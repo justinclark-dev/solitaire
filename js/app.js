@@ -1,7 +1,12 @@
 /*-------------------------------- Constants --------------------------------*/
 
-const suits = ['♠', '♥', '♦', '♣'];
+// const suits = ['♠', '♥', '♦', '♣'];
+
+const suits = ['s', 'h', 'd', 'c'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+
+// const suits = ['s'];
+// const ranks = ['A','K','J'];
 
 /*-------------------------------- Variables --------------------------------*/
 
@@ -9,23 +14,65 @@ let deck = [];
 let stockPile = [];
 let drawnPile = [];
 
+let clubsPile = [];
+let heartsPile = [];
+let diamondsPile = [];
+let spadesPile = [];
+
+
+let col1Faceup = [];
+let col2Faceup = [];
+let col3Faceup = [];
+let col4Faceup = [];
+let col5Faceup = [];
+let col6Faceup = [];
+let col7Faceup = [];
+
+let col2Facedown = [];
+let col3Facedown = [];
+let col4Facedown = [];
+let col5Facedown = [];
+let col6Facedown = [];
+let col7Facedown = [];
+
 /*------------------------ Cached Element References ------------------------*/
 
+const copyYear = document.querySelector('#year');
 const newGameBtn = document.querySelector('#new-game');
+// stock pile container
 const stockPileDiv = document.querySelector('#stock-pile');
 const drawnPileDiv = document.querySelector('#drawn-pile');
-const clubsFoundation = document.querySelector('#clubs')
-const heartsFoundation = document.querySelector('#hearts')
-const diamondsFoundation = document.querySelector('#diamonds')
-const spadesFoundation = document.querySelector('#spades')
+// foundation piles
+const clubsPileDiv = document.querySelector('#clubs');
+const heartsPileDiv = document.querySelector('#hearts');
+const diamondsPileDiv = document.querySelector('#diamonds');
+const spadesPileDiv = document.querySelector('#spades');
+// tableau section
+const col1Div = document.querySelector('#col-1');
+const col2Div = document.querySelector('#col-2');
+const col3Div = document.querySelector('#col-3');
+const col4Div = document.querySelector('#col-4');
+const col5Div = document.querySelector('#col-5');
+const col6Div = document.querySelector('#col-6');
+const col7Div = document.querySelector('#col-7');
+
 /*-------------------------------- Functions --------------------------------*/
+
+// set copy right year
+const setCopyYear = () => {
+    let currentYear = new Date();
+    currentYear = currentYear.getFullYear();
+    copyYear.innerText = currentYear;
+}
+setCopyYear();
 
 // Creates deck
 const createDeck = () => {
     deck = [];
     for (let suit of suits) {
         for (let rank of ranks) {
-            deck.push({ suit, rank });
+            const id = `${suit}${rank}`
+            deck.push({ suit, rank, id });
         }
     }
 }
@@ -45,7 +92,7 @@ const dealCards = () => {
     for (let i = deck.length; i > 0; i--) {
         stockPile.push(deck.pop());
     }
-    drawnPile.push(stockPile.pop());
+    
 }
 
 // Gets card value
@@ -61,58 +108,135 @@ const getCardValue = (card) => {
 
 // handle card clicked
 const handleCardClick = (event) => {
-    console.log('Button clicked!');
-    console.log(event.target)
+    // console.log('Button clicked!');
+    // console.log(event.target);
 };
 
+const stockPileClick = (event) => {
+    // console.log(stockPile.length)
+    if (stockPile.length > 1) {
+        /*
+            flip top card
+            move card to drawn pile
+            animate flip and move (optional)
+        */
+        drawnPile.push(stockPile.pop());
+
+        renderDrawnPile();
+    } else if (stockPile.length===1) {
+        /*
+            flip drawn cards pile
+            move pile to stock pile
+        */
+
+        drawnPile.push(stockPile.pop());
+
+        renderDrawnPile();
+        renderStockPile();
+
+    } else {
+        for (let i = drawnPile.length; i > 0; i--) {
+            stockPile.push(drawnPile.pop());
+        }
+        renderDrawnPile();
+        renderStockPile();
+    }
+}
+/************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
 // This is a start: https://stackoverflow.com/questions/36379184/html5-draggable-hide-original-element
 
 // Drag and Drop source:
 // https://www.w3schools.com/HTML/html5_draganddrop.asp
+
+//let parentId = '';
+let draggedFromParentId = '';
+let draggedItemId = '';
+
 function dragstartHandler(event) {
-    event.dataTransfer.setData("text", event.target.id);
+    //event.dataTransfer.setData("text", event.target.id);
+    
+    draggedFromParentId = event.target.parentElement.id;
+    draggedItemId = event.target.id
+    
 }
 
 function dragoverHandler(event) {
     event.preventDefault();
-    console.log('hovering...')
+    console.log('hovering...');
 }
+
+
+
 
 function dropHandler(event) {
     event.preventDefault();
-    const data = event.dataTransfer.getData("text");
-    console.log(data)
-    event.target.appendChild(document.getElementById(data));
-}
+    // const data = event.dataTransfer.getData("text");
+    const data = draggedItemId;
+    console.log(data);
+    
+    const targetId = event.target.id;
+    switch (targetId) {
+        case 'clubs':
+            
+            /* 
+            Explanation:
+                .findIndex() loops through each element in the array.
+                For each element (obj), it checks whether obj.id === "001".
+                It returns the index of the first matching object (or -1 if none match).
+            */
+            const index = drawnPile.findIndex(obj => obj.id === data)
+            // console.log(`indexOf(${data}) is index: ${index}`)
+            
+            clubsPile.push(drawnPile.splice(index, 1))
 
+            console.log('drawnPile: '+drawnPile.length)
+            console.log('clubsPile: '+clubsPile.length)
+        case 'hearts':
+        case 'diamonds':
+        case 'spades':
+
+    }
+    console.log(event.target)
+    event.target.appendChild(document.getElementById(data));
+
+
+    // drawnPileDiv.removeChild(document.getElementById(data))
+
+}
+/*************************************************************************/
 
 // Creates a card
 const createCard = (c, cardDiv, frontBack) => {
-    let cardClass = '';
-    switch (c.suit) {
-        case '♥':
-            cardClass = `h${c.rank}`;
-            break;
-        case '♦':
-            cardClass = `d${c.rank}`;
-            break;
-        case '♠':
-            cardClass = `s${c.rank}`;
-            break;
-        case '♣':
-            cardClass = `c${c.rank}`;
-            break;
-    }
+    // let cardClass = '';
+    // switch (c.suit) {
+    //     case '♥':
+    //         cardClass = `h${c.rank}`;
+    //         break;
+    //     case '♦':
+    //         cardClass = `d${c.rank}`;
+    //         break;
+    //     case '♠':
+    //         cardClass = `s${c.rank}`;
+    //         break;
+    //     case '♣':
+    //         cardClass = `c${c.rank}`;
+    //         break;
+    // }
 
+    // const id = cardClass;
+
+    let cardClass = c.id;
     const id = cardClass;
+
+
     const div = document.createElement("div");
 
     // TODO: create helper function so we can toggle the front/back
     if (frontBack === 'front') {
 
         div.setAttribute('id', id);
-        div.setAttribute('draggable', true)
+        div.setAttribute('draggable', true);
         div.classList.add('card');
         div.classList.add('large');
         div.classList.add('front');
@@ -125,7 +249,7 @@ const createCard = (c, cardDiv, frontBack) => {
         div.addEventListener('drop', dropHandler);
     } else if (frontBack === 'back') {
 
-        div.setAttribute('id', id);
+        // div.setAttribute('id', id);
         div.classList.add('card');
         div.classList.add('large');
         div.classList.add('back-blue');
@@ -142,47 +266,167 @@ const createCard = (c, cardDiv, frontBack) => {
 // renders the stock pile
 const renderStockPile = () => {
     stockPileDiv.innerHTML = '';
-    stockPile.map(c => createCard(c, stockPileDiv, 'back'));
+    if (stockPile.length > 0) {
+        stockPile.map(c => createCard(c, stockPileDiv, 'back'));
+    }
 }
 
-
-// Starts off hiding first card of dealer
+// renders the drawn cards pile
 const renderDrawnPile = () => {
     drawnPileDiv.innerHTML = '';
-    drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
+    if (drawnPile.length > 0) {
+        // drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
+        drawnPile.map(c => {
+            // console.log(`suit: ${c.suit}, rank: ${c.rank}, id: ${c.id}`)
+            createCard(c, drawnPileDiv, 'front')
+        });
+    }
 }
 
 // render table
 const renderCards = () => {
-    // renderStockPile();***********************************************
-    renderStockPile()
+    renderStockPile();
     renderDrawnPile();
 }
 
 // starts a new game
 const newGame = (event) => {
+    clearGame();
     createDeck();
     shuffleDeck();
     dealCards();
     renderCards();
+}
 
-    console.log('deck: ' + deck.length)
-    console.log('stockPile: ' + stockPile.length)
-    console.log('drawnPile: ' + drawnPile.length)
+const clearGame = () => {
+
+    stockPileDiv.innerHTML = '';
+    drawnPileDiv.innerHTML = '';
+    clubsPileDiv.innerHTML = '';
+    heartsPileDiv.innerHTML = '';
+    diamondsPileDiv.innerHTML = '';
+    spadesPileDiv.innerHTML = '';
+
+    deck = [];
+    stockPile = [];
+    drawnPile = [];
+
+    clubsPile = [];
+    heartsPile = [];
+    diamondsPile = [];
+    spadesPile = [];
+
+
+    col1Faceup = [];
+    col2Faceup = [];
+    col3Faceup = [];
+    col4Faceup = [];
+    col5Faceup = [];
+    col6Faceup = [];
+    col7Faceup = [];
+
+    col2Facedown = [];
+    col3Facedown = [];
+    col4Facedown = [];
+    col5Facedown = [];
+    col6Facedown = [];
+    col7Facedown = [];
 }
 
 /*----------------------------- Event Listeners -----------------------------*/
 
 newGameBtn.addEventListener('click', newGame);
 
+stockPileDiv.addEventListener('click', stockPileClick)
+
 //dragoverHandler
-clubsFoundation.addEventListener('dragover', dragoverHandler);
-heartsFoundation.addEventListener('dragover', dragoverHandler);
-diamondsFoundation.addEventListener('dragover', dragoverHandler);
-spadesFoundation.addEventListener('dragover', dragoverHandler);
+clubsPileDiv.addEventListener('dragover', dragoverHandler);
+heartsPileDiv.addEventListener('dragover', dragoverHandler);
+diamondsPileDiv.addEventListener('dragover', dragoverHandler);
+spadesPileDiv.addEventListener('dragover', dragoverHandler);
 
 //dropHandler
-clubsFoundation.addEventListener('drop', dropHandler);
-heartsFoundation.addEventListener('drop', dropHandler);
-diamondsFoundation.addEventListener('drop', dropHandler);
-spadesFoundation.addEventListener('drop', dropHandler);
+clubsPileDiv.addEventListener('drop', dropHandler);
+heartsPileDiv.addEventListener('drop', dropHandler);
+diamondsPileDiv.addEventListener('drop', dropHandler);
+spadesPileDiv.addEventListener('drop', dropHandler);
+
+/*
+
+Key milesontes complete:
+
+Add logic to add IDs to all card elements.
+Figure out logic to determine what card was clicked.
+Figure out logic to drag and drop elements.
+Figure out logic to detect hover targets.
+
+stock pile click handler
+    if stock pile not empty
+        flip top card
+        move card to drawn pile
+        animate flip and move (optional)
+    else
+        flip drawn cards pile
+        move pile to stock pile
+
+column arrays
+    col1Faceup
+    col2Faceup
+    col3Faceup
+    col4Faceup
+    col5Faceup
+    col6Faceup
+    col7Faceup
+
+    col2Facedown
+    col3Facedown
+    col4Facedown
+    col5Facedown
+    col6Facedown
+    col7Facedown
+    
+
+        
+Key milesontes, what's left:
+
+card drop handler
+    if dropping single card
+        if drop in foundation piles
+            if foundation pile is empty
+                card must be Ace
+            else card must be:
+                next higher rank 
+                and same suit
+        if drop in column
+            if column empty 
+                rank must be King
+            else
+                card to attach to 
+                    must be face up
+                card to attach
+                    suit must be opposite color
+                    rank must be next lower rank
+    else if dropping pile
+        can only drop on face up column
+        top card must be
+            next lower rank of existing pile
+            opposite suit color of existing pile
+
+column card click handler
+    if card is face up
+        note the highest ordered card in order
+        select all cards below
+        automove card to available spot (optional)
+    else if card is face down
+        flip card face up
+
+
+auto flip (optional)
+    (how to detect this?)
+    if no face up pile on top
+        auto flip last facedown column card
+    
+
+
+
+ */
