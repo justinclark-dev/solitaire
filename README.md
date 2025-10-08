@@ -47,6 +47,8 @@ Consists of the Stock Pile, Drawn Cards Pile, Foundation Piles, and Columns.
 #### Cards
 Cards consist of a standard deck of 52 cards.
 
+<img src="./images/solitaire-layout.png">
+
 ### Five DOM Interactions for MVP
 
 #### 1. New Game Button Click
