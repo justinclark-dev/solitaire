@@ -56,8 +56,14 @@ const getCardValue = (card) => {
     return parseInt(card.rank);
 }
 
+// handle card clicked
+const handleCardClick = (event) => {
+    console.log('Button clicked!');
+    console.log(event.target)
+};
+
 // Creates a card
-const createCard = (c, cardDiv) => {
+const createCard = (c, cardDiv, frontBack) => {
     let cardClass = '';
     switch (c.suit) {
         case '♥':
@@ -74,28 +80,22 @@ const createCard = (c, cardDiv) => {
             break;
     }
 
+    const id = cardClass;
     const div = document.createElement("div");
-    div.classList.add('card');
-    div.classList.add('large');
-    div.classList.add('front');
-    div.classList.add(cardClass);
-    div.innerHTML = `
-          <div class="top">${c.rank}</div>
-          <div class="middle">${c.suit}</div>
-          <div class="bottom">${c.rank}</div>
-        `;
-    cardDiv.appendChild(div);
-}
 
-// renders the stock pile
-const renderStockPile = () => {
-    stockPileDiv.innerHTML = '';
-
-    console.log('renderStockPile function initiated...')
-    for (let index = stockPile.length; index > 0; index--) {
-        console.log(`Cards left in draw pile: ${stockPile.length}`)
+    // TODO: create helper function so we can toggle the front/back
+    if (frontBack==='front') {
         
-        const div = document.createElement("div");
+        div.setAttribute('id', id);
+        div.classList.add('card');
+        div.classList.add('large');
+        div.classList.add('front');
+        div.classList.add(cardClass);
+
+        cardDiv.appendChild(div);
+    } else if (frontBack==='back') {
+        
+        div.setAttribute('id', id);
         div.classList.add('card');
         div.classList.add('large');
         div.classList.add('back-blue');
@@ -103,21 +103,29 @@ const renderStockPile = () => {
         div.classList.add('back');
 
         stockPileDiv.appendChild(div);
-        
-        console.log('renderStockPile for loop content: '+stockPile.length);
-    } 
-    console.log('renderStockPile function ended...');
+    }
+
+    // dynamically create event listener after div is created
+    div.addEventListener('click', handleCardClick)
 }
+
+// renders the stock pile
+const renderStockPile = () => {
+    stockPileDiv.innerHTML = '';
+    stockPile.map(c => createCard(c, stockPileDiv, 'back'));
+}
+
 
 // Starts off hiding first card of dealer
 const renderDrawnPile = () => {
     drawnPileDiv.innerHTML = '';
-    drawnPile.map(c => createCard(c, drawnPileDiv));
+    drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
 }
 
 // render table
 const renderCards = () => {
-    renderStockPile();
+    // renderStockPile();***********************************************
+    renderStockPile()
     renderDrawnPile();
 }
 
@@ -136,3 +144,13 @@ const newGame = (event) => {
 /*----------------------------- Event Listeners -----------------------------*/
 
 newGameBtn.addEventListener('click', newGame);
+
+
+// Test card drag and drop
+// let buttons = document.querySelectorAll('.button');
+// const cardElements = document.querySelectorAll('.card');
+// cardElements.forEach((cardElement) => {
+//     // alert(cardElement);
+//     alert()
+//     console.log(cardElement)
+// });
