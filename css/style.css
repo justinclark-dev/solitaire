@@ -152,6 +152,11 @@ main {
     gap: 60px;
     justify-self: end;
 }
+.foundation > div {
+    height: 150px;
+    width: 120px;
+}
+
 .tableau {
     display: flex;
     flex-direction: row;

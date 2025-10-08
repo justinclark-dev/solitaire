@@ -14,7 +14,10 @@ let drawnPile = [];
 const newGameBtn = document.querySelector('#new-game');
 const stockPileDiv = document.querySelector('#stock-pile');
 const drawnPileDiv = document.querySelector('#drawn-pile');
-
+const clubsFoundation = document.querySelector('#clubs')
+const heartsFoundation = document.querySelector('#hearts')
+const diamondsFoundation = document.querySelector('#diamonds')
+const spadesFoundation = document.querySelector('#spades')
 /*-------------------------------- Functions --------------------------------*/
 
 // Creates deck
@@ -62,6 +65,28 @@ const handleCardClick = (event) => {
     console.log(event.target)
 };
 
+// TODO: look into hiding dragged element's original location until dropped in new location.
+// This is a start: https://stackoverflow.com/questions/36379184/html5-draggable-hide-original-element
+
+// Drag and Drop source:
+// https://www.w3schools.com/HTML/html5_draganddrop.asp
+function dragstartHandler(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+function dragoverHandler(event) {
+    event.preventDefault();
+    console.log('hovering...')
+}
+
+function dropHandler(event) {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("text");
+    console.log(data)
+    event.target.appendChild(document.getElementById(data));
+}
+
+
 // Creates a card
 const createCard = (c, cardDiv, frontBack) => {
     let cardClass = '';
@@ -84,17 +109,22 @@ const createCard = (c, cardDiv, frontBack) => {
     const div = document.createElement("div");
 
     // TODO: create helper function so we can toggle the front/back
-    if (frontBack==='front') {
-        
+    if (frontBack === 'front') {
+
         div.setAttribute('id', id);
+        div.setAttribute('draggable', true)
         div.classList.add('card');
         div.classList.add('large');
         div.classList.add('front');
         div.classList.add(cardClass);
 
         cardDiv.appendChild(div);
-    } else if (frontBack==='back') {
-        
+
+        div.addEventListener('dragstart', dragstartHandler);
+        div.addEventListener('dragover', dragoverHandler);
+        div.addEventListener('drop', dropHandler);
+    } else if (frontBack === 'back') {
+
         div.setAttribute('id', id);
         div.classList.add('card');
         div.classList.add('large');
@@ -106,7 +136,7 @@ const createCard = (c, cardDiv, frontBack) => {
     }
 
     // dynamically create event listener after div is created
-    div.addEventListener('click', handleCardClick)
+    div.addEventListener('click', handleCardClick);
 }
 
 // renders the stock pile
@@ -136,21 +166,23 @@ const newGame = (event) => {
     dealCards();
     renderCards();
 
-    console.log('deck: '+deck.length)
-    console.log('stockPile: '+stockPile.length)
-    console.log('drawnPile: '+drawnPile.length)
+    console.log('deck: ' + deck.length)
+    console.log('stockPile: ' + stockPile.length)
+    console.log('drawnPile: ' + drawnPile.length)
 }
 
 /*----------------------------- Event Listeners -----------------------------*/
 
 newGameBtn.addEventListener('click', newGame);
 
+//dragoverHandler
+clubsFoundation.addEventListener('dragover', dragoverHandler);
+heartsFoundation.addEventListener('dragover', dragoverHandler);
+diamondsFoundation.addEventListener('dragover', dragoverHandler);
+spadesFoundation.addEventListener('dragover', dragoverHandler);
 
-// Test card drag and drop
-// let buttons = document.querySelectorAll('.button');
-// const cardElements = document.querySelectorAll('.card');
-// cardElements.forEach((cardElement) => {
-//     // alert(cardElement);
-//     alert()
-//     console.log(cardElement)
-// });
+//dropHandler
+clubsFoundation.addEventListener('drop', dropHandler);
+heartsFoundation.addEventListener('drop', dropHandler);
+diamondsFoundation.addEventListener('drop', dropHandler);
+spadesFoundation.addEventListener('drop', dropHandler);
