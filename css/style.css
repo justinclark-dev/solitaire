@@ -37,12 +37,7 @@ body {
     padding: 0;
 }
 
-main {
-    min-width: 1000px;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-}
+
 
 h1 {
     font-size: 7em;
@@ -78,3 +73,88 @@ nav .center-nav {
 nav .center-nav div {
     color: lime;
 }
+
+/************************************/
+
+.stock-pile-container,
+#stock-pile,
+#drawn-pile,
+.table-top,
+.foundation,
+#clubs,
+#hearts,
+#diamonds,
+#spades,
+#col-1,
+#col-2,
+#col-3,
+#col-4,
+#col-5,
+#col-6,
+#col-7,
+.tableau {
+    min-height: 150px;
+    min-width: 120px;
+    outline: 1px solid red;
+}
+
+
+
+
+main {
+    min-width: 940px;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(1fr, 2);
+    gap: 120px;
+    outline: 1px solid blue;
+}
+
+
+.table-top {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: 1fr;
+    /* justify-content: space-between; */
+}
+.stock-pile-container {
+    position: relative;
+    
+    /* height: 100px;
+    width: 300px; */
+
+    display: grid;
+    grid-template-columns: 120px 120px;
+    grid-template-rows: 1fr;
+    gap: 60px
+}
+
+
+#drawn-pile {
+    /* margin-left: 150px; */
+}
+.back:nth-of-type(1n+1) {
+    /* margin: -51px; */
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+   
+}
+
+
+
+.foundation {
+    display: grid;
+    grid-template-columns: 120px 120px 120px 120px;
+    grid-template-rows: 1fr;
+    gap: 60px;
+    justify-self: end;
+}
+.tableau {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+}
+

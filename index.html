@@ -15,7 +15,7 @@
             <button id="new-game">Start New Game</button>
         </div>
         <div class="center-nav">
-            Score: <div id="player-score">1,776</div>
+            Score: <div id="player-score">0</div>
             Time Playing:<div id="time-playing">0:00</div>
         </div>
         <div class="right-nav">
@@ -28,26 +28,27 @@
     </header>
 
     <main>
-        <div class="draw-piles">
-            <div id="stock-pile"></div>
-            <div id="drawn-pile"></div>
+        
+        <div class="table-top">
+            <div class="stock-pile-container">
+                <div id="stock-pile">stock pile</div>
+                <div id="drawn-pile">drawn pile</div>
+            </div>
+            <div class="foundation">
+                <div id="clubs">clubs</div>
+                <div id="hearts">hearts</div>
+                <div id="diamonds">diamonds</div>
+                <div id="spades">spades</div>
+            </div>
         </div>
-
-        <div class="foundation">
-            <div id="clubs"></div>
-            <div id="hearts"></div>
-            <div id="diamonds"></div>
-            <div id="spades"></div>
-        </div>
-
         <div class="tableau">
-            <div class="col-1"></div>
-            <div class="col-2"></div>
-            <div class="col-3"></div>
-            <div class="col-4"></div>
-            <div class="col-5"></div>
-            <div class="col-6"></div>
-            <div class="col-7"></div>
+            <div id="col-1">column 1</div>
+            <div id="col-2">column 2</div>
+            <div id="col-3">column 3</div>
+            <div id="col-4">column 4</div>
+            <div id="col-5">column 5</div>
+            <div id="col-6">column 6</div>
+            <div id="col-7">column 7</div>
         </div>
 
     </main>
