@@ -171,34 +171,137 @@ function dragoverHandler(event) {
 
 function dropHandler(event) {
     event.preventDefault();
-    // const data = event.dataTransfer.getData("text");
+
+    const targetParent = event.target.parentElement;
+    const targetChild = event.target;
+
     const data = draggedItemId;
-    console.log(data);
     
-    const targetId = event.target.id;
+
+    const droppedToParentId = event.target.parentElement.id;
+    
+    let draggedFrom;
+    let targetId;
+
+    let fromPile;
+    let toPile;
+
+    let targetDiv;
+
+    if (targetChild.classList.contains('card')) {
+        targetId = targetParent.id;
+
+        draggedFrom = draggedFromParentId;
+        targetDiv = targetParent
+    } else {
+        targetId = targetChild.id
+        draggedFrom = draggedFromParentId
+        targetDiv = targetChild
+    }
+
+
+    // alert(targetId)
+
+
+        switch (draggedFrom) {
+            case 'drawn-pile':
+                fromPile = drawnPile;
+                break;
+            case 'clubs':
+                fromPile = clubsPile;
+                break;
+            case 'hearts':
+                fromPile = heartsPile;
+                break;
+            case 'diamonds':
+                fromPile = diamondsPile;
+                break;
+            case 'spades':
+                fromPile = spadesPile;
+                break;
+            case 'col-1':
+                fromPile = col1Faceup;
+                break;
+            case 'col-2':
+                fromPile = col2Faceup;
+                break;
+            case 'col-3':
+                fromPile = col3Faceup;
+                break;
+            case 'col-4':
+                fromPile = col4Faceup;
+                break;
+            case 'col-5':
+                fromPile = col5Faceup;
+                break;
+            case 'col-6':
+                fromPile = col6Faceup;
+                break;
+            case 'col-7':
+                fromPile = col7Faceup;
+                break;
+        }
+
+
+// alert(targetId)
+
     switch (targetId) {
         case 'clubs':
-            
-            /* 
-            Explanation:
-                .findIndex() loops through each element in the array.
-                For each element (obj), it checks whether obj.id === "001".
-                It returns the index of the first matching object (or -1 if none match).
-            */
-            const index = drawnPile.findIndex(obj => obj.id === data)
-            // console.log(`indexOf(${data}) is index: ${index}`)
-            
-            clubsPile.push(drawnPile.splice(index, 1))
-
-            console.log('drawnPile: '+drawnPile.length)
-            console.log('clubsPile: '+clubsPile.length)
+            toPile = clubsPile;
+            break;
         case 'hearts':
+            toPile = heartsPile;
+            break;
         case 'diamonds':
+            toPile = diamondsPile;
+            break;
         case 'spades':
+            toPile = spadesPile;
+            break;
+        case 'col-1':
+            toPile = col1Faceup;
+            break;
+        case 'col-2':
+            toPile = col2Faceup;
+            break;
+        case 'col-3':
+            toPile = col3Faceup;
+            break;
+        case 'col-4':
+            toPile = col4Faceup;
+            break;
+        case 'col-5':
+            toPile = col5Faceup;
+            break;
+        case 'col-6':
+            toPile = col6Faceup;
+            break;
+        case 'col-7':
+            toPile = col7Faceup;
+            break;
 
     }
-    console.log(event.target)
-    event.target.appendChild(document.getElementById(data));
+
+    
+
+    /* 
+    Explanation:
+        .findIndex() loops through each element in the array.
+        For each element (obj), it checks whether obj.id === "001".
+        It returns the index of the first matching object (or -1 if none match).
+    */
+    const index = fromPile.findIndex(obj => obj.id === data)
+    // console.log(`indexOf(${data}) is index: ${index}`)
+    
+    toPile.push(fromPile.splice(index, 1))
+
+
+    console.log('stockPile: '+stockPile.length)
+    console.log('drawnPile: '+drawnPile.length)
+    console.log('clubsPile: '+clubsPile.length)
+
+    // console.log(event.target)
+    targetDiv.appendChild(document.getElementById(data));
 
 
     // drawnPileDiv.removeChild(document.getElementById(data))
@@ -208,23 +311,6 @@ function dropHandler(event) {
 
 // Creates a card
 const createCard = (c, cardDiv, frontBack) => {
-    // let cardClass = '';
-    // switch (c.suit) {
-    //     case '♥':
-    //         cardClass = `h${c.rank}`;
-    //         break;
-    //     case '♦':
-    //         cardClass = `d${c.rank}`;
-    //         break;
-    //     case '♠':
-    //         cardClass = `s${c.rank}`;
-    //         break;
-    //     case '♣':
-    //         cardClass = `c${c.rank}`;
-    //         break;
-    // }
-
-    // const id = cardClass;
 
     let cardClass = c.id;
     const id = cardClass;
@@ -302,10 +388,10 @@ const clearGame = () => {
 
     stockPileDiv.innerHTML = '';
     drawnPileDiv.innerHTML = '';
-    clubsPileDiv.innerHTML = '';
-    heartsPileDiv.innerHTML = '';
-    diamondsPileDiv.innerHTML = '';
-    spadesPileDiv.innerHTML = '';
+    clubsPileDiv.innerHTML = 'clubs';
+    heartsPileDiv.innerHTML = 'hearts';
+    diamondsPileDiv.innerHTML = 'diamonds';
+    spadesPileDiv.innerHTML = 'spades';
 
     deck = [];
     stockPile = [];
@@ -351,6 +437,23 @@ heartsPileDiv.addEventListener('drop', dropHandler);
 diamondsPileDiv.addEventListener('drop', dropHandler);
 spadesPileDiv.addEventListener('drop', dropHandler);
 
+
+col1Div.addEventListener('dragover', dragoverHandler);
+col2Div.addEventListener('dragover', dragoverHandler);
+col3Div.addEventListener('dragover', dragoverHandler);
+col4Div.addEventListener('dragover', dragoverHandler);
+col5Div.addEventListener('dragover', dragoverHandler);
+col6Div.addEventListener('dragover', dragoverHandler);
+col7Div.addEventListener('dragover', dragoverHandler);
+
+col1Div.addEventListener('drop', dropHandler);
+col2Div.addEventListener('drop', dropHandler);
+col3Div.addEventListener('drop', dropHandler);
+col4Div.addEventListener('drop', dropHandler);
+col5Div.addEventListener('drop', dropHandler);
+col6Div.addEventListener('drop', dropHandler);
+col7Div.addEventListener('drop', dropHandler);
+
 /*
 
 Key milesontes complete:
@@ -359,6 +462,12 @@ Add logic to add IDs to all card elements.
 Figure out logic to determine what card was clicked.
 Figure out logic to drag and drop elements.
 Figure out logic to detect hover targets.
+
+
+Key milesontes, what's left:
+
+*/
+/*
 
 stock pile click handler
     if stock pile not empty
@@ -385,10 +494,6 @@ column arrays
     col6Facedown
     col7Facedown
     
-
-        
-Key milesontes, what's left:
-
 card drop handler
     if dropping single card
         if drop in foundation piles
@@ -425,8 +530,5 @@ auto flip (optional)
     (how to detect this?)
     if no face up pile on top
         auto flip last facedown column card
-    
-
-
 
  */
