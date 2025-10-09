@@ -2,11 +2,11 @@
 
 // const suits = ['♠', '♥', '♦', '♣'];
 
-// const suits = ['s', 'h', 'd', 'c'];
-// const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+const suits = ['s', 'h', 'd', 'c'];
+const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-const suits = ['s'];
-const ranks = ['A','K','J'];
+// const suits = ['s'];
+// const ranks = ['A','K','J'];
 
 /*-------------------------------- Variables --------------------------------*/
 
@@ -108,6 +108,26 @@ const getCardValue = (card) => {
     return parseInt(card.rank);
 }
 
+const getRankSuit = (cardId) => {
+    
+    
+    const charArr = [...cardId]
+    const cardSuit = charArr[0]
+
+    if (charArr.length === 2) {
+        cardRank = charArr[1];
+    } else {
+        cardRank = `${charArr[1]}${charArr[2]}`;
+    }
+
+    const cardObj = { suit: cardSuit, rank: cardRank };
+    return cardObj;
+    // return { suit: "s", rank: "05" };
+    // for (let i = 1; i < charArr.length; i++) {
+    //     const checkLetter = char.toLowerCase().match(/[a-z]/)
+    // }
+}
+
 // handle card clicked
 const handleCardClick = (event) => {
    // console.log('Button clicked!')
@@ -207,6 +227,8 @@ const getDestinationArray = (arr) => {
 function dropHandler(event) {
     event.preventDefault();
 
+    
+
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
     
@@ -214,14 +236,66 @@ function dropHandler(event) {
     let targetId;
     let targetDiv;
 
+    const draggedCardObj = getRankSuit(draggedItemId);
+    const draggedCardValue = getCardValue(draggedCardObj);
+
+    console.log(draggedCardValue)
+
+    
     if (targetChild.classList.contains('card')) {
+        // the pile already has cards
         targetId = targetParent.id;
         draggedFrom = draggedFromParentId;
         targetDiv = targetParent
+
+        const topCardId = event.target.id;
+        const topCardObj = getRankSuit(topCardId);
+        const topCardValue = getCardValue(topCardObj);
+
+        // alert('topCardValue: '+topCardValue)
+        // alert('draggedCardValue: '+draggedCardValue)
+
+        console.log('Here')
+        
+        let a = draggedCardValue > topCardValue;
+        console.log('draggedCardValue > topCardValue: '+ a)
+        let b = draggedCardValue - topCardValue;
+        console.log('draggedCardValue - topCardValue: '+ b)
+
+        if (draggedCardValue <= topCardValue) {
+            alert('Must be next rank in accending order!')
+            return
+        
+        } else if (b !== 1) {
+            alert('Must be the next number 1 away')
+            return
+        }
+
     } else {
-        targetId = targetChild.id
-        draggedFrom = draggedFromParentId
-        targetDiv = targetChild
+        // the pile is empty
+        targetId = targetChild.id;
+        draggedFrom = draggedFromParentId;
+        targetDiv = targetChild;
+
+
+
+        if (draggedCardValue !== 1) {
+            alert('Only Aces are allowed!')
+            return
+        }
+
+        // console.log('Card: ----------------------------');
+        // console.log(cardObj.suit)
+        // console.log(cardObj.rank)
+        // console.log(cardValue)
+        // console.log('----------------------------------');
+        // console.log(event.target);
+        // console.log(draggedItemId);
+        // console.log(
+        //     'targetId: '+targetId+
+        //     '\ndraggedFrom: '+draggedFrom+
+        //     '\ntargetDiv: '+targetDiv
+        // );
     }
 
     let fromPile = getOriginationArray(draggedFrom);
@@ -233,7 +307,7 @@ function dropHandler(event) {
         For each element (obj), it checks whether obj.id === "001".
         It returns the index of the first matching object (or -1 if none match).
     */
-    const index = fromPile.findIndex(obj => obj.id === draggedItemId)
+    const index = fromPile.findIndex(obj => obj.id === draggedItemId);
     
     /*
     Explanation of the Code
@@ -241,7 +315,7 @@ function dropHandler(event) {
         push(removedItem[0]): This adds the first element of the removedItem array (which is "banana") to targetArray.
         This method effectively moves an item from one array to another while modifying the original array.
     */
-    toPile.push(fromPile.splice(index, 1)[0])
+    toPile.push(fromPile.splice(index, 1)[0]);
     targetDiv.appendChild(document.getElementById(draggedItemId)); 
 
     // console.log(fromPile.length)
@@ -379,7 +453,7 @@ const getArrayItems = (arr, arrName) => {
         } else {
             divText += `<div>${item[0]}</div>`;
         }
-        console.log(item[0])
+        // console.log(item[0])
     }
     divText += ` </div>`;
     return divText;

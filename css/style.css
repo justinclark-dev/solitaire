@@ -185,7 +185,15 @@ position: absolute;
 .foundation>div {
     min-height: 150px;
     width: 120px;
+    position: relative;
 }
+
+.foundation .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 
 .tableau {
     display: flex;
@@ -209,6 +217,8 @@ position: absolute;
             until moved or moved back
 
 */
+
+
 
 #clubs {
     border: 5px solid gold;
