@@ -213,3 +213,10 @@ position: absolute;
 #clubs {
     border: 5px solid gold;
 }
+
+#var-statuses {
+    color: lime;
+    display: flex;
+    align-items: start;
+    gap: 10px;
+}

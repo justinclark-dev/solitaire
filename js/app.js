@@ -2,11 +2,11 @@
 
 // const suits = ['♠', '♥', '♦', '♣'];
 
-const suits = ['s', 'h', 'd', 'c'];
-const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+// const suits = ['s', 'h', 'd', 'c'];
+// const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-// const suits = ['s'];
-// const ranks = ['A','K','J'];
+const suits = ['s'];
+const ranks = ['A','K','J'];
 
 /*-------------------------------- Variables --------------------------------*/
 
@@ -55,6 +55,8 @@ const col4Div = document.querySelector('#col-4');
 const col5Div = document.querySelector('#col-5');
 const col6Div = document.querySelector('#col-6');
 const col7Div = document.querySelector('#col-7');
+
+const varStatuses = document.querySelector('#var-statuses');
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -108,12 +110,12 @@ const getCardValue = (card) => {
 
 // handle card clicked
 const handleCardClick = (event) => {
-    // console.log('Button clicked!');
-    // console.log(event.target);
+   // console.log('Button clicked!')
+
 };
 
 const stockPileClick = (event) => {
-    // console.log(stockPile.length)
+    
     if (stockPile.length > 1) {
         /*
             flip top card
@@ -141,6 +143,8 @@ const stockPileClick = (event) => {
         renderDrawnPile();
         renderStockPile();
     }
+    // for testing
+    renderVarStatuses()
 }
 /************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
@@ -200,7 +204,6 @@ const getDestinationArray = (arr) => {
     }
 }
 
-
 function dropHandler(event) {
     event.preventDefault();
 
@@ -213,7 +216,6 @@ function dropHandler(event) {
 
     if (targetChild.classList.contains('card')) {
         targetId = targetParent.id;
-
         draggedFrom = draggedFromParentId;
         targetDiv = targetParent
     } else {
@@ -233,8 +235,22 @@ function dropHandler(event) {
     */
     const index = fromPile.findIndex(obj => obj.id === draggedItemId)
     
-    toPile.push(fromPile.splice(index, 1))
+    /*
+    Explanation of the Code
+        splice(1, 1): This removes one item at index 1 from sourceArray, which is "banana". The removed item is returned as an array.
+        push(removedItem[0]): This adds the first element of the removedItem array (which is "banana") to targetArray.
+        This method effectively moves an item from one array to another while modifying the original array.
+    */
+    toPile.push(fromPile.splice(index, 1)[0])
     targetDiv.appendChild(document.getElementById(draggedItemId)); 
+
+    // console.log(fromPile.length)
+    // console.log(toPile.length)
+
+    // for testing
+    renderVarStatuses();
+
+    event.stopPropagation();
 
 }
 /*************************************************************************/
@@ -293,7 +309,6 @@ const renderDrawnPile = () => {
     if (drawnPile.length > 0) {
         // drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
         drawnPile.map(c => {
-            // console.log(`suit: ${c.suit}, rank: ${c.rank}, id: ${c.id}`)
             createCard(c, drawnPileDiv, 'front')
         });
     }
@@ -303,6 +318,9 @@ const renderDrawnPile = () => {
 const renderCards = () => {
     renderStockPile();
     renderDrawnPile();
+
+    // for testing
+    renderVarStatuses();
 }
 
 // starts a new game
@@ -312,6 +330,8 @@ const newGame = (event) => {
     shuffleDeck();
     dealCards();
     renderCards();
+
+
 }
 
 const clearGame = () => {
@@ -348,6 +368,51 @@ const clearGame = () => {
     col6Facedown = [];
     col7Facedown = [];
 }
+/* ********************************************************** */
+// LOG ALL ARRAY DATA FOR TESTING
+const getArrayItems = (arr, arrName) => {
+    let divText = `<div> ${arrName}`;
+    for (const item of arr) {
+        // alert(item.id)
+        if (item.id !== undefined) {
+            divText += `<div>${item.id}</div>`;
+        } else {
+            divText += `<div>${item[0]}</div>`;
+        }
+        console.log(item[0])
+    }
+    divText += ` </div>`;
+    return divText;
+}
+
+const renderVarStatuses = () => {
+
+    varStatuses.innerHTML = '';
+
+    varStatuses.innerHTML += getArrayItems(stockPile, 'stockPile');
+    varStatuses.innerHTML += getArrayItems(drawnPile, 'drawnPile');
+
+    varStatuses.innerHTML += getArrayItems(clubsPile, 'clubsPile');
+    varStatuses.innerHTML += getArrayItems(heartsPile, 'heartsPile');
+    varStatuses.innerHTML += getArrayItems(diamondsPile, 'diamondsPile');
+    varStatuses.innerHTML += getArrayItems(spadesPile, 'spadesPile');
+
+    varStatuses.innerHTML += getArrayItems(col1Faceup, 'col1Faceup');
+    varStatuses.innerHTML += getArrayItems(col2Faceup, 'col2Faceup');
+    varStatuses.innerHTML += getArrayItems(col3Faceup, 'col3Faceup');
+    varStatuses.innerHTML += getArrayItems(col4Faceup, 'col4Faceup');
+    varStatuses.innerHTML += getArrayItems(col5Faceup, 'col5Faceup');
+    varStatuses.innerHTML += getArrayItems(col6Faceup, 'col6Faceup');
+    varStatuses.innerHTML += getArrayItems(col7Faceup, 'col7Faceup');
+
+    varStatuses.innerHTML += getArrayItems(col2Facedown, 'col2Facedown');
+    varStatuses.innerHTML += getArrayItems(col3Facedown, 'col3Facedown');
+    varStatuses.innerHTML += getArrayItems(col4Facedown, 'col4Facedown');
+    varStatuses.innerHTML += getArrayItems(col5Facedown, 'col5Facedown');
+    varStatuses.innerHTML += getArrayItems(col6Facedown, 'col6Facedown');
+    varStatuses.innerHTML += getArrayItems(col7Facedown, 'col7Facedown');
+}
+/* ********************************************************** */
 
 /*----------------------------- Event Listeners -----------------------------*/
 
