@@ -94,7 +94,37 @@ const dealCards = () => {
     for (let i = deck.length; i > 0; i--) {
         stockPile.push(deck.pop());
     }
-    
+    /*
+    stockPileDiv.innerHTML = '';
+    if (stockPile.length > 0) {
+        stockPile.map(c => createCard(c, stockPileDiv, 'back'));
+    }*/
+    const columnPileDivs = [col1Div, col2Div, col3Div, col4Div, col5Div, col6Div, col7Div];
+
+    const facedownPiles = [col2Facedown, col3Facedown, col4Facedown, col5Facedown, col6Facedown, col7Facedown];
+    for (let i = 0; i < facedownPiles.length; i++) {
+        //console.log(i)
+        facedownPiles[i].push(stockPile.pop());
+        facedownPiles[i].map(c => createCard(c, columnPileDivs[i+1], 'back'));
+    }
+
+    // for (let i = 0; i < columnPileDivs.length; i++) {
+    //     //console.log(i)
+    //     facedownPiles[i].push(stockPile.pop());
+    // }
+
+
+
+
+    for (let i = 0; i < 5; i++) {
+
+    }
+
+    const faceupPiles = ['col1Faceup', 'col2Faceup', 'col3Faceup', 'col4Faceup', 'col5Faceup', 'col6Faceup', 'col7Faceup']
+    for (let i = 0; i < 6; i++) {
+
+    }
+
 }
 
 // Gets card value
@@ -166,6 +196,124 @@ const stockPileClick = (event) => {
     // for testing
     renderVarStatuses()
 }
+
+
+// Creates a card
+const createCard = (c, cardDiv, frontBack) => {
+
+    let cardClass = c.id;
+    const id = cardClass;
+
+
+    const div = document.createElement("div");
+
+    // TODO: create helper function so we can toggle the front/back
+    if (frontBack === 'front') {
+
+        div.setAttribute('id', id);
+        div.setAttribute('draggable', true);
+        div.classList.add('card');
+        div.classList.add('large');
+        div.classList.add('front');
+        div.classList.add(cardClass);
+
+        cardDiv.appendChild(div);
+
+        div.addEventListener('dragstart', dragstartHandler);
+        div.addEventListener('dragover', dragoverHandler);
+        div.addEventListener('drop', dropHandler);
+    } else if (frontBack === 'back') {
+
+        div.setAttribute('id', 'TemporaryIDis-'+id);
+        div.classList.add('card');
+        div.classList.add('large');
+        div.classList.add('back-blue');
+        div.classList.add('shadow');
+        div.classList.add('back');
+
+        cardDiv.appendChild(div);
+    }
+
+    // dynamically create event listener after div is created
+    div.addEventListener('click', handleCardClick);
+}
+
+// renders the stock pile
+const renderStockPile = () => {
+    stockPileDiv.innerHTML = '';
+    if (stockPile.length > 0) {
+        stockPile.map(c => createCard(c, stockPileDiv, 'back'));
+    }
+}
+
+// renders the drawn cards pile
+const renderDrawnPile = () => {
+    drawnPileDiv.innerHTML = '';
+    if (drawnPile.length > 0) {
+        // drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
+        drawnPile.map(c => {
+            createCard(c, drawnPileDiv, 'front')
+        });
+    }
+}
+
+// render table
+const renderCards = () => {
+    renderStockPile();
+    renderDrawnPile();
+
+    // for testing
+    renderVarStatuses();
+}
+
+// starts a new game
+const newGame = (event) => {
+    clearGame();
+    createDeck();
+    shuffleDeck();
+    dealCards();
+    renderCards();
+
+
+}
+
+const clearGame = () => {
+
+    stockPileDiv.innerHTML = '';
+    drawnPileDiv.innerHTML = '';
+    clubsPileDiv.innerHTML = 'clubs';
+    heartsPileDiv.innerHTML = 'hearts';
+    diamondsPileDiv.innerHTML = 'diamonds';
+    spadesPileDiv.innerHTML = 'spades';
+
+    deck = [];
+    stockPile = [];
+    drawnPile = [];
+
+    clubsPile = [];
+    heartsPile = [];
+    diamondsPile = [];
+    spadesPile = [];
+
+
+    col1Faceup = [];
+    col2Faceup = [];
+    col3Faceup = [];
+    col4Faceup = [];
+    col5Faceup = [];
+    col6Faceup = [];
+    col7Faceup = [];
+
+    col2Facedown = [];
+    col3Facedown = [];
+    col4Facedown = [];
+    col5Facedown = [];
+    col6Facedown = [];
+    col7Facedown = [];
+}
+
+
+
 /************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
 // This is a start: https://stackoverflow.com/questions/36379184/html5-draggable-hide-original-element
@@ -327,119 +475,9 @@ function dropHandler(event) {
 }
 /*************************************************************************/
 
-// Creates a card
-const createCard = (c, cardDiv, frontBack) => {
-
-    let cardClass = c.id;
-    const id = cardClass;
 
 
-    const div = document.createElement("div");
 
-    // TODO: create helper function so we can toggle the front/back
-    if (frontBack === 'front') {
-
-        div.setAttribute('id', id);
-        div.setAttribute('draggable', true);
-        div.classList.add('card');
-        div.classList.add('large');
-        div.classList.add('front');
-        div.classList.add(cardClass);
-
-        cardDiv.appendChild(div);
-
-        div.addEventListener('dragstart', dragstartHandler);
-        div.addEventListener('dragover', dragoverHandler);
-        div.addEventListener('drop', dropHandler);
-    } else if (frontBack === 'back') {
-
-        // div.setAttribute('id', id);
-        div.classList.add('card');
-        div.classList.add('large');
-        div.classList.add('back-blue');
-        div.classList.add('shadow');
-        div.classList.add('back');
-
-        stockPileDiv.appendChild(div);
-    }
-
-    // dynamically create event listener after div is created
-    div.addEventListener('click', handleCardClick);
-}
-
-// renders the stock pile
-const renderStockPile = () => {
-    stockPileDiv.innerHTML = '';
-    if (stockPile.length > 0) {
-        stockPile.map(c => createCard(c, stockPileDiv, 'back'));
-    }
-}
-
-// renders the drawn cards pile
-const renderDrawnPile = () => {
-    drawnPileDiv.innerHTML = '';
-    if (drawnPile.length > 0) {
-        // drawnPile.map(c => createCard(c, drawnPileDiv, 'front'));
-        drawnPile.map(c => {
-            createCard(c, drawnPileDiv, 'front')
-        });
-    }
-}
-
-// render table
-const renderCards = () => {
-    renderStockPile();
-    renderDrawnPile();
-
-    // for testing
-    renderVarStatuses();
-}
-
-// starts a new game
-const newGame = (event) => {
-    clearGame();
-    createDeck();
-    shuffleDeck();
-    dealCards();
-    renderCards();
-
-
-}
-
-const clearGame = () => {
-
-    stockPileDiv.innerHTML = '';
-    drawnPileDiv.innerHTML = '';
-    clubsPileDiv.innerHTML = 'clubs';
-    heartsPileDiv.innerHTML = 'hearts';
-    diamondsPileDiv.innerHTML = 'diamonds';
-    spadesPileDiv.innerHTML = 'spades';
-
-    deck = [];
-    stockPile = [];
-    drawnPile = [];
-
-    clubsPile = [];
-    heartsPile = [];
-    diamondsPile = [];
-    spadesPile = [];
-
-
-    col1Faceup = [];
-    col2Faceup = [];
-    col3Faceup = [];
-    col4Faceup = [];
-    col5Faceup = [];
-    col6Faceup = [];
-    col7Faceup = [];
-
-    col2Facedown = [];
-    col3Facedown = [];
-    col4Facedown = [];
-    col5Facedown = [];
-    col6Facedown = [];
-    col7Facedown = [];
-}
 /* ********************************************************** */
 // LOG ALL ARRAY DATA FOR TESTING
 const getArrayItems = (arr, arrName) => {
