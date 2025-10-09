@@ -265,7 +265,6 @@ function dropHandler(event) {
         if (draggedCardValue <= topCardValue) {
             alert('Must be next rank in accending order!')
             return
-        
         } else if (b !== 1) {
             alert('Must be the next number 1 away')
             return
@@ -277,25 +276,24 @@ function dropHandler(event) {
         draggedFrom = draggedFromParentId;
         targetDiv = targetChild;
 
-
-
-        if (draggedCardValue !== 1) {
-            alert('Only Aces are allowed!')
-            return
+        switch (targetId) {
+            case 'clubs':
+            case 'hearts':
+            case 'diamonds':
+            case 'spades':
+                const charArr = [...targetId];
+                if (charArr[0] !== draggedCardObj.suit) {
+                    alert('Suit of card must match suit of pile!')
+                    return;
+                }
+                if (draggedCardValue !== 1) {
+                    alert('Only Aces are allowed!')
+                    return;
+                }
+                break;
         }
 
-        // console.log('Card: ----------------------------');
-        // console.log(cardObj.suit)
-        // console.log(cardObj.rank)
-        // console.log(cardValue)
-        // console.log('----------------------------------');
-        // console.log(event.target);
-        // console.log(draggedItemId);
-        // console.log(
-        //     'targetId: '+targetId+
-        //     '\ndraggedFrom: '+draggedFrom+
-        //     '\ntargetDiv: '+targetDiv
-        // );
+
     }
 
     let fromPile = getOriginationArray(draggedFrom);
@@ -599,3 +597,30 @@ auto flip (optional)
         auto flip last facedown column card
 
  */
+
+/*
+
+Thursday:
+---------------------------------------------------------
+only empty foundation pile slots require Aces
+Only one suit allowed per foundation pile
+deal face-down cards in columns
+deal face-up cards in columns
+create rules for decending order on columns
+create rules for alternating suit color on columns
+
+Friday:
+---------------------------------------------------------
+detect all foundation piles full
+create timer and start on game start
+stop timer when foundation piles are detected full
+create rules for scoring
+integrate rules for scoreing
+Calculate score with time.
+create game rules page
+create splash page
+code cleanup & refactoring
+add polish
+code cleanup & refactoring (last pass)
+
+*/
