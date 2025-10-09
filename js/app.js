@@ -94,13 +94,10 @@ const dealCards = () => {
     for (let i = deck.length; i > 0; i--) {
         stockPile.push(deck.pop());
     }
-    /*
-    stockPileDiv.innerHTML = '';
-    if (stockPile.length > 0) {
-        stockPile.map(c => createCard(c, stockPileDiv, 'back'));
-    }*/
+
     const columnPileDivs = [col1Div, col2Div, col3Div, col4Div, col5Div, col6Div, col7Div];
 
+    // deal facedown cards
     const facedownPiles = [col2Facedown, col3Facedown, col4Facedown, col5Facedown, col6Facedown, col7Facedown];
     for (let i = 0; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
@@ -126,21 +123,12 @@ const dealCards = () => {
         facedownPiles[i].push(stockPile.pop());
         createCard(facedownPiles[i][5], columnPileDivs[i+1], 'back')
     }
-    // for (let i = 0; i < columnPileDivs.length; i++) {
-    //     //console.log(i)
-    //     facedownPiles[i].push(stockPile.pop());
-    // }
 
-
-
-
-    for (let i = 0; i < 5; i++) {
-
-    }
-
-    const faceupPiles = ['col1Faceup', 'col2Faceup', 'col3Faceup', 'col4Faceup', 'col5Faceup', 'col6Faceup', 'col7Faceup']
-    for (let i = 0; i < 6; i++) {
-
+    // deal faceup cards
+    const faceupPiles = [col1Faceup, col2Faceup, col3Faceup, col4Faceup, col5Faceup, col6Faceup, col7Faceup]
+    for (let i = 0; i < 7; i++) {
+        faceupPiles[i].push(stockPile.pop());
+        createCard(faceupPiles[i][0], columnPileDivs[i], 'front')
     }
 
 }
@@ -304,6 +292,14 @@ const clearGame = () => {
     diamondsPileDiv.innerHTML = 'diamonds';
     spadesPileDiv.innerHTML = 'spades';
 
+    col1Div.innerHTML = 'column 1';
+    col2Div.innerHTML = 'column 2';
+    col3Div.innerHTML = 'column 3';
+    col4Div.innerHTML = 'column 4';
+    col5Div.innerHTML = 'column 5';
+    col6Div.innerHTML = 'column 6';
+    col7Div.innerHTML = 'column 7';
+
     deck = [];
     stockPile = [];
     drawnPile = [];
@@ -454,6 +450,21 @@ function dropHandler(event) {
                 }
                 if (draggedCardValue !== 1) {
                     alert('Only Aces are allowed!')
+                    return;
+                }
+                break;
+        }
+
+        switch (targetId) {
+            case 'col-1':
+            case 'col-2':
+            case 'col-3':
+            case 'col-4':
+            case 'col-5':
+            case 'col-6':
+            case 'col-7':
+                if (draggedCardValue !== 13) {
+                    alert('Only Kings are allowed in empty columns!')
                     return;
                 }
                 break;
