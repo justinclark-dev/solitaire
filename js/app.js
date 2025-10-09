@@ -103,11 +103,29 @@ const dealCards = () => {
 
     const facedownPiles = [col2Facedown, col3Facedown, col4Facedown, col5Facedown, col6Facedown, col7Facedown];
     for (let i = 0; i < facedownPiles.length; i++) {
-        //console.log(i)
         facedownPiles[i].push(stockPile.pop());
         facedownPiles[i].map(c => createCard(c, columnPileDivs[i+1], 'back'));
     }
-
+    for (let i = 1; i < facedownPiles.length; i++) {
+        facedownPiles[i].push(stockPile.pop());
+        createCard(facedownPiles[i][1], columnPileDivs[i+1], 'back')
+    }
+    for (let i = 2; i < facedownPiles.length; i++) {
+        facedownPiles[i].push(stockPile.pop());
+        createCard(facedownPiles[i][2], columnPileDivs[i+1], 'back')
+    }
+    for (let i = 3; i < facedownPiles.length; i++) {
+        facedownPiles[i].push(stockPile.pop());
+        createCard(facedownPiles[i][3], columnPileDivs[i+1], 'back')
+    }
+    for (let i = 4; i < facedownPiles.length; i++) {
+        facedownPiles[i].push(stockPile.pop());
+        createCard(facedownPiles[i][4], columnPileDivs[i+1], 'back')
+    }   
+    for (let i = 5; i < facedownPiles.length; i++) {
+        facedownPiles[i].push(stockPile.pop());
+        createCard(facedownPiles[i][5], columnPileDivs[i+1], 'back')
+    }
     // for (let i = 0; i < columnPileDivs.length; i++) {
     //     //console.log(i)
     //     facedownPiles[i].push(stockPile.pop());
@@ -161,7 +179,7 @@ const getRankSuit = (cardId) => {
 // handle card clicked
 const handleCardClick = (event) => {
    // console.log('Button clicked!')
-
+    // alert('Button Clicked!')
 };
 
 const stockPileClick = (event) => {
