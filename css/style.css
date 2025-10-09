@@ -183,7 +183,7 @@ position: absolute;
 }
 
 .foundation>div {
-    height: 150px;
+    min-height: 150px;
     width: 120px;
 }
 

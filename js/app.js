@@ -167,6 +167,38 @@ function dragoverHandler(event) {
 }
 
 
+const getOriginationArray = (arr) => {
+    switch (arr) {
+        case 'drawn-pile': return drawnPile;
+        case 'clubs': return clubsPile;
+        case 'hearts': return heartsPile;
+        case 'diamonds': return diamondsPile;
+        case 'spades': return spadesPile;
+        case 'col-1': return col1Faceup;
+        case 'col-2': return col2Faceup;
+        case 'col-3': return col3Faceup;
+        case 'col-4': return col4Faceup;
+        case 'col-5': return col5Faceup;
+        case 'col-6': return col6Faceup;
+        case 'col-7': return col7Faceup;
+    }
+}
+
+const getDestinationArray = (arr) => {
+    switch (arr) {
+        case 'clubs': return clubsPile;
+        case 'hearts': return heartsPile;
+        case 'diamonds': return diamondsPile;
+        case 'spades': return spadesPile;
+        case 'col-1': return col1Faceup;
+        case 'col-2': return col2Faceup;
+        case 'col-3': return col3Faceup;
+        case 'col-4': return col4Faceup;
+        case 'col-5': return col5Faceup;
+        case 'col-6': return col6Faceup;
+        case 'col-7': return col7Faceup;
+    }
+}
 
 
 function dropHandler(event) {
@@ -174,18 +206,9 @@ function dropHandler(event) {
 
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
-
-    const data = draggedItemId;
-    
-
-    const droppedToParentId = event.target.parentElement.id;
     
     let draggedFrom;
     let targetId;
-
-    let fromPile;
-    let toPile;
-
     let targetDiv;
 
     if (targetChild.classList.contains('card')) {
@@ -199,90 +222,8 @@ function dropHandler(event) {
         targetDiv = targetChild
     }
 
-
-    // alert(targetId)
-
-
-        switch (draggedFrom) {
-            case 'drawn-pile':
-                fromPile = drawnPile;
-                break;
-            case 'clubs':
-                fromPile = clubsPile;
-                break;
-            case 'hearts':
-                fromPile = heartsPile;
-                break;
-            case 'diamonds':
-                fromPile = diamondsPile;
-                break;
-            case 'spades':
-                fromPile = spadesPile;
-                break;
-            case 'col-1':
-                fromPile = col1Faceup;
-                break;
-            case 'col-2':
-                fromPile = col2Faceup;
-                break;
-            case 'col-3':
-                fromPile = col3Faceup;
-                break;
-            case 'col-4':
-                fromPile = col4Faceup;
-                break;
-            case 'col-5':
-                fromPile = col5Faceup;
-                break;
-            case 'col-6':
-                fromPile = col6Faceup;
-                break;
-            case 'col-7':
-                fromPile = col7Faceup;
-                break;
-        }
-
-
-// alert(targetId)
-
-    switch (targetId) {
-        case 'clubs':
-            toPile = clubsPile;
-            break;
-        case 'hearts':
-            toPile = heartsPile;
-            break;
-        case 'diamonds':
-            toPile = diamondsPile;
-            break;
-        case 'spades':
-            toPile = spadesPile;
-            break;
-        case 'col-1':
-            toPile = col1Faceup;
-            break;
-        case 'col-2':
-            toPile = col2Faceup;
-            break;
-        case 'col-3':
-            toPile = col3Faceup;
-            break;
-        case 'col-4':
-            toPile = col4Faceup;
-            break;
-        case 'col-5':
-            toPile = col5Faceup;
-            break;
-        case 'col-6':
-            toPile = col6Faceup;
-            break;
-        case 'col-7':
-            toPile = col7Faceup;
-            break;
-
-    }
-
-    
+    let fromPile = getOriginationArray(draggedFrom);
+    let toPile = getDestinationArray(targetId);
 
     /* 
     Explanation:
@@ -290,21 +231,10 @@ function dropHandler(event) {
         For each element (obj), it checks whether obj.id === "001".
         It returns the index of the first matching object (or -1 if none match).
     */
-    const index = fromPile.findIndex(obj => obj.id === data)
-    // console.log(`indexOf(${data}) is index: ${index}`)
+    const index = fromPile.findIndex(obj => obj.id === draggedItemId)
     
     toPile.push(fromPile.splice(index, 1))
-
-
-    console.log('stockPile: '+stockPile.length)
-    console.log('drawnPile: '+drawnPile.length)
-    console.log('clubsPile: '+clubsPile.length)
-
-    // console.log(event.target)
-    targetDiv.appendChild(document.getElementById(data));
-
-
-    // drawnPileDiv.removeChild(document.getElementById(data))
+    targetDiv.appendChild(document.getElementById(draggedItemId)); 
 
 }
 /*************************************************************************/
@@ -466,8 +396,6 @@ Figure out logic to detect hover targets.
 
 Key milesontes, what's left:
 
-*/
-/*
 
 stock pile click handler
     if stock pile not empty
