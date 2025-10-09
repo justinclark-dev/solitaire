@@ -389,7 +389,7 @@ const getDestinationArray = (arr) => {
 function dropHandler(event) {
     event.preventDefault();
 
-    
+    // alert('event.stopPropagation()... not stopping!')
 
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
@@ -406,6 +406,7 @@ function dropHandler(event) {
     
     if (targetChild.classList.contains('card')) {
         // the pile already has cards
+
         targetId = targetParent.id;
         draggedFrom = draggedFromParentId;
         targetDiv = targetParent
@@ -417,22 +418,75 @@ function dropHandler(event) {
         // alert('topCardValue: '+topCardValue)
         // alert('draggedCardValue: '+draggedCardValue)
 
-        console.log('Here')
-        
-        let a = draggedCardValue > topCardValue;
-        console.log('draggedCardValue > topCardValue: '+ a)
-        let b = draggedCardValue - topCardValue;
-        console.log('draggedCardValue - topCardValue: '+ b)
+        console.log('topCardObj: '+topCardObj.suit)
 
-        if (draggedCardValue <= topCardValue) {
-            alert('Must be next rank in accending order!')
-            return
-        } else if (b !== 1) {
-            alert('Must be the next number 1 away')
-            return
-        }
+        // alert('targetId in card: '+targetId)
+
+        switch (targetId) {
+            case 'clubs':
+            case 'hearts':
+            case 'diamonds':
+            case 'spades':
+                // enforce ascending order
+                if (draggedCardValue <= topCardValue) {
+                    alert('Must be next rank in accending order!')
+                    return
+                } else if ((draggedCardValue - topCardValue) !== 1) {
+                    alert('Must be the next number 1 away')
+                    return
+                }
+
+                if (charArr[0] !== draggedCardObj.suit) {
+                    alert('Suit of card must match suit of pile!')
+                    return;
+                }
+
+                break;
+        // }
+        // switch (targetId) {
+            case 'col-1':
+            case 'col-2':
+            case 'col-3':
+            case 'col-4':
+            case 'col-5':
+            case 'col-6':
+            case 'col-7':
+
+                // enforce descending order
+                if (draggedCardValue >= topCardValue) {
+                    alert('Must be next rank in decending order!')
+                    return
+                } else if ((topCardValue - draggedCardValue) !== 1) {
+                    alert('Must be the next number 1 away')
+                    return
+                }
+
+                // enforce alternating suit colors
+                if (draggedCardObj.suit === 'h' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
+                    alert('Color of suit must alternate!')
+                    return;
+                }
+                if (draggedCardObj.suit === 'd' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
+                    alert('Color of suit must alternate!')
+                    return;
+                }
+                if (draggedCardObj.suit === 'c' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
+                    alert('Color of suit must alternate!')
+                    return;
+                }
+                if (draggedCardObj.suit === 's' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
+                    alert('Color of suit must alternate!')
+                    return;
+                }
+               
+                break;
+
+        } // <== end switch()
 
     } else {
+
+        // alert('targetId (column supposed to be empty?): '+targetId)
+
         // the pile is empty
         targetId = targetChild.id;
         draggedFrom = draggedFromParentId;
@@ -453,9 +507,9 @@ function dropHandler(event) {
                     return;
                 }
                 break;
-        }
+        // }
 
-        switch (targetId) {
+        // switch (targetId) {
             case 'col-1':
             case 'col-2':
             case 'col-3':
@@ -463,6 +517,7 @@ function dropHandler(event) {
             case 'col-5':
             case 'col-6':
             case 'col-7':
+                // enforce only kings in empty columns
                 if (draggedCardValue !== 13) {
                     alert('Only Kings are allowed in empty columns!')
                     return;
@@ -496,10 +551,14 @@ function dropHandler(event) {
     // console.log(fromPile.length)
     // console.log(toPile.length)
 
+
     // for testing
     renderVarStatuses();
 
+    
+
     event.stopPropagation();
+    
 
 }
 /*************************************************************************/

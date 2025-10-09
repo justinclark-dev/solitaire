@@ -200,7 +200,7 @@ position: absolute;
     display: flex;
     flex-direction: row;
     gap: 60px;
-    height: 100vh;
+    max-height: 100vh;
     
 }
 .tableau #col-7 {
@@ -239,4 +239,11 @@ position: absolute;
     display: flex;
     align-items: start;
     gap: 10px;
+    border: 1px solid lime;
 }
+#var-statuses div {
+    border: 1px solid lime;
+}
+/* #var-statuses > div:nth-child(2) {
+    border-right: 2px solid red;
+} */
