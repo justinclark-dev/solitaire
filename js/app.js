@@ -37,6 +37,10 @@ let col7Facedown = [];
 
 let movePile = [];
 
+let gameTimeStarted = 0;
+let gameTimeStopped = 0;
+let isGameRunning = false;
+
 /*------------------------ Cached Element References ------------------------*/
 
 const copyYear = document.querySelector('#year');
@@ -275,6 +279,60 @@ const renderCards = () => {
     renderVarStatuses();
 }
 
+
+
+
+
+gameTimeStarted = new Date();
+
+const renderTimePlaying = () => {
+
+    let endTime = new Date();
+    let elapsed = endTime - gameTimeStarted; // time in milliseconds
+
+    let seconds = Math.floor((elapsed / 1000) % 60);
+    let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+    let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+
+    if (seconds < 10) seconds = `0${seconds}`;
+    if (minutes < 10) minutes = `0${minutes}`;
+    if (hours < 10) hours = `0${hours}`;
+
+    const timeString = `${hours}:${minutes}:${seconds}`;
+    const timePlaying = document.getElementById('time-playing');
+
+    timePlaying.innerHTML = timeString;
+
+
+    // console.log(`${minutes} minutes : ${seconds} seconds`);
+
+
+}
+setInterval(renderTimePlaying, 1000);
+
+
+
+
+
+// let startTime = Date.now(); // Record the start time
+
+// function updateElapsedTime() {
+//     let currentTime = Date.now(); // Get the current time
+//     let elapsedTime = Math.floor((currentTime - startTime) / 1000); // Calculate elapsed time in seconds
+//     document.getElementById("elapsedTime").innerHTML = `${elapsedTime} seconds`; // Update the display
+// }
+
+// // Update the elapsed time every second
+// setInterval(updateElapsedTime, 1000);
+
+
+
+// gameTimeStarted = new Date.now();
+
+isGameRunning = true;
+
+
+
 // starts a new game
 const newGame = (event) => {
     clearGame();
@@ -284,6 +342,9 @@ const newGame = (event) => {
     renderCards();
 
 
+
+
+    
 }
 
 const clearGame = () => {
@@ -327,6 +388,10 @@ const clearGame = () => {
     col5Facedown = [];
     col6Facedown = [];
     col7Facedown = [];
+
+    gameTimeStarted = 0;
+    gameTimeStopped = 0;
+    isGameRunning = false;
 }
 
 
@@ -691,6 +756,20 @@ function dropHandler(event) {
     // for testing
     renderVarStatuses();
 
+    // DETECT WINNING GAME
+    const clubsFull = clubsPile.length === 13;
+    const diamondsFull = diamondsPile.length === 13;
+    const spadesFull = spadesPile.length === 13;
+    const heartsFull = heartsPile.length === 13;
+
+    // if (clubsFull===true && diamondsFull===true && spadesFull===true && heartsFull===true) {
+    if (clubsFull && diamondsFull && spadesFull && heartsFull) {
+
+        alert('You win!')
+        gameTimeStopped = new Date();
+        isGameRunning = false();
+
+    }
     
 
     event.stopPropagation();
@@ -794,106 +873,3 @@ col5Div.addEventListener('drop', dropHandler);
 col6Div.addEventListener('drop', dropHandler);
 col7Div.addEventListener('drop', dropHandler);
 
-/*
-
-Key milesontes complete:
-
-Add logic to add IDs to all card elements.
-Figure out logic to determine what card was clicked.
-Figure out logic to drag and drop elements.
-Figure out logic to detect hover targets.
-
-
-Key milesontes, what's left:
-
-
-stock pile click handler
-    if stock pile not empty
-        flip top card
-        move card to drawn pile
-        animate flip and move (optional)
-    else
-        flip drawn cards pile
-        move pile to stock pile
-
-column arrays
-    col1Faceup
-    col2Faceup
-    col3Faceup
-    col4Faceup
-    col5Faceup
-    col6Faceup
-    col7Faceup
-
-    col2Facedown
-    col3Facedown
-    col4Facedown
-    col5Facedown
-    col6Facedown
-    col7Facedown
-    
-card drop handler
-    if dropping single card
-        if drop in foundation piles
-            if foundation pile is empty
-                card must be Ace
-            else card must be:
-                next higher rank 
-                and same suit
-        if drop in column
-            if column empty 
-                rank must be King
-            else
-                card to attach to 
-                    must be face up
-                card to attach
-                    suit must be opposite color
-                    rank must be next lower rank
-    else if dropping pile
-        can only drop on face up column
-        top card must be
-            next lower rank of existing pile
-            opposite suit color of existing pile
-
-column card click handler
-    if card is face up
-        note the highest ordered card in order
-        select all cards below
-        automove card to available spot (optional)
-    else if card is face down
-        flip card face up
-
-
-auto flip (optional)
-    (how to detect this?)
-    if no face up pile on top
-        auto flip last facedown column card
-
- */
-
-/*
-
-Thursday:
----------------------------------------------------------
-only empty foundation pile slots require Aces
-Only one suit allowed per foundation pile
-deal face-down cards in columns
-deal face-up cards in columns
-create rules for decending order on columns
-create rules for alternating suit color on columns
-
-Friday:
----------------------------------------------------------
-detect all foundation piles full
-create timer and start on game start
-stop timer when foundation piles are detected full
-create rules for scoring
-integrate rules for scoreing
-Calculate score with time.
-create game rules page
-create splash page
-code cleanup & refactoring
-add polish
-code cleanup & refactoring (last pass)
-
-*/
