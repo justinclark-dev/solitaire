@@ -35,6 +35,8 @@ let col5Facedown = [];
 let col6Facedown = [];
 let col7Facedown = [];
 
+let movePile = [];
+
 /*------------------------ Cached Element References ------------------------*/
 
 const copyYear = document.querySelector('#year');
@@ -339,51 +341,97 @@ const clearGame = () => {
 //let parentId = '';
 let draggedFromParentId = '';
 let draggedItemId = '';
+let isStack = false;
+
+const fillMovePile = (fromPile) => {
+    
+    movePile = []
+    /* 
+    ChatGPT Explanation:
+        .findIndex() loops through each element in the array.
+        For each element (obj), it checks whether obj.id === "001".
+        It returns the index of the first matching object (or -1 if none match).
+    */
+    const index = fromPile.findIndex(obj => obj.id === draggedItemId);
+    console.log(`\nGetting stack cards list...`);
+    console.log(`Dragged card id: ${index}`);
+    console.log(`Last index of stack: ${fromPile.length - 1}`);
+    for (let i = fromPile.length - 1; i >= index; i--) {
+        console.log(`This card id: ${draggedItemId} is at index: ${i}.`);
+        console.log(fromPile[i])
+        movePile.push(fromPile[i]);
+    }
+
+    if (movePile.length > 1) {
+        isStack = true;
+    } else {
+        isStack = false
+    }
+
+}
 
 function dragstartHandler(event) {
     //event.dataTransfer.setData("text", event.target.id);
     
     draggedFromParentId = event.target.parentElement.id;
-    draggedItemId = event.target.id
+    draggedItemId = event.target.id;
+
+    // movePile
+  
     
+    let fromPile;
+    switch (draggedFromParentId) {
+        case 'col-1': fillMovePile(col1Faceup); break;
+        case 'col-2': fillMovePile(col2Faceup); break;
+        case 'col-3': fillMovePile(col3Faceup); break;
+        case 'col-4': fillMovePile(col4Faceup); break;
+        case 'col-5': fillMovePile(col5Faceup); break;
+        case 'col-6': fillMovePile(col6Faceup); break;
+        case 'col-7': fillMovePile(col7Faceup); break;
+    }
+
+    renderVarStatuses();
 }
 
 function dragoverHandler(event) {
     event.preventDefault();
     console.log('hovering...');
+
+
+    
 }
 
 
 const getOriginationArray = (arr) => {
     switch (arr) {
-        case 'drawn-pile': return drawnPile;
-        case 'clubs': return clubsPile;
-        case 'hearts': return heartsPile;
-        case 'diamonds': return diamondsPile;
-        case 'spades': return spadesPile;
-        case 'col-1': return col1Faceup;
-        case 'col-2': return col2Faceup;
-        case 'col-3': return col3Faceup;
-        case 'col-4': return col4Faceup;
-        case 'col-5': return col5Faceup;
-        case 'col-6': return col6Faceup;
-        case 'col-7': return col7Faceup;
+        case 'drawn-pile': console.log('getOriginationArray(drawn-pile '); return drawnPile;
+        case 'clubs': console.log('getOriginationArray(clubs '); return clubsPile;
+        case 'hearts': console.log('getOriginationArray(hearts' ); return heartsPile;
+        case 'diamonds': console.log('getOriginationArray(diamonds' ); return diamondsPile;
+        case 'spades': console.log('getOriginationArray(spades '); return spadesPile;
+        case 'col-1': console.log('getOriginationArray(col1Faceup '); return col1Faceup;
+        case 'col-2': console.log('getOriginationArray(col2Faceup '); return col2Faceup;
+        case 'col-3': console.log('getOriginationArray(col3Faceup '); return col3Faceup;
+        case 'col-4': console.log('getOriginationArray(col4Faceup '); return col4Faceup;
+        case 'col-5': console.log('getOriginationArray(col5Faceup '); return col5Faceup;
+        case 'col-6': console.log('getOriginationArray(col6Faceup '); return col6Faceup;
+        case 'col-7': console.log('getOriginationArray(col7Faceup '); return col7Faceup;
     }
 }
 
 const getDestinationArray = (arr) => {
     switch (arr) {
-        case 'clubs': return clubsPile;
-        case 'hearts': return heartsPile;
-        case 'diamonds': return diamondsPile;
-        case 'spades': return spadesPile;
-        case 'col-1': return col1Faceup;
-        case 'col-2': return col2Faceup;
-        case 'col-3': return col3Faceup;
-        case 'col-4': return col4Faceup;
-        case 'col-5': return col5Faceup;
-        case 'col-6': return col6Faceup;
-        case 'col-7': return col7Faceup;
+        case 'clubs': console.log('getDestinationArray(clubs '); return clubsPile;
+        case 'hearts': console.log('getDestinationArray(hearts '); return heartsPile;
+        case 'diamonds': console.log('getDestinationArray(diamonds '); return diamondsPile;
+        case 'spades': console.log('getDestinationArray(spades '); return spadesPile;
+        case 'col-1': console.log('getDestinationArray(col1Faceup '); return col1Faceup;
+        case 'col-2': console.log('getDestinationArray(col2Faceup '); return col2Faceup;
+        case 'col-3': console.log('getDestinationArray(col3Faceup '); return col3Faceup;
+        case 'col-4': console.log('getDestinationArray(col4Faceup '); return col4Faceup;
+        case 'col-5': console.log('getDestinationArray(col5Faceup '); return col5Faceup;
+        case 'col-6': console.log('getDestinationArray(col6Faceup '); return col6Faceup;
+        case 'col-7': console.log('getDestinationArray(col7Faceup '); return col7Faceup;
     }
 }
 
@@ -430,15 +478,15 @@ function dropHandler(event) {
             case 'spades':
                 // enforce ascending order
                 if (draggedCardValue <= topCardValue) {
-                    alert('Must be next rank in accending order!')
+                    // alert('Must be next rank in accending order!')
                     return
                 } else if ((draggedCardValue - topCardValue) !== 1) {
-                    alert('Must be the next number 1 away')
+                    // alert('Must be the next number 1 away')
                     return
                 }
 
                 if (charArr[0] !== draggedCardObj.suit) {
-                    alert('Suit of card must match suit of pile!')
+                    // alert('Suit of card must match suit of pile!')
                     return;
                 }
 
@@ -455,28 +503,28 @@ function dropHandler(event) {
 
                 // enforce descending order
                 if (draggedCardValue >= topCardValue) {
-                    alert('Must be next rank in decending order!')
+                    // alert('Must be next rank in decending order!')
                     return
                 } else if ((topCardValue - draggedCardValue) !== 1) {
-                    alert('Must be the next number 1 away')
+                    // alert('Must be the next number 1 away')
                     return
                 }
 
                 // enforce alternating suit colors
                 if (draggedCardObj.suit === 'h' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
-                    alert('Color of suit must alternate!')
+                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 'd' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
-                    alert('Color of suit must alternate!')
+                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 'c' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
-                    alert('Color of suit must alternate!')
+                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 's' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
-                    alert('Color of suit must alternate!')
+                    // alert('Color of suit must alternate!')
                     return;
                 }
                
@@ -504,11 +552,11 @@ function dropHandler(event) {
             case 'spades':
                 const charArr = [...targetId];
                 if (charArr[0] !== draggedCardObj.suit) {
-                    alert('Suit of card must match suit of pile!')
+                    // alert('Suit of card must match suit of pile!')
                     return;
                 }
                 if (draggedCardValue !== 1) {
-                    alert('Only Aces are allowed!')
+                    // alert('Only Aces are allowed!')
                     return;
                 }
                 break;
@@ -524,7 +572,7 @@ function dropHandler(event) {
             case 'col-7':
                 // enforce only kings in empty columns
                 if (draggedCardValue !== 13) {
-                    alert('Only Kings are allowed in empty columns!')
+                    // alert('Only Kings are allowed in empty columns!')
                     return;
                 }
                 break;
@@ -536,6 +584,9 @@ function dropHandler(event) {
     let fromPile = getOriginationArray(draggedFrom);
     let toPile = getDestinationArray(targetId);
 
+
+    // alert('alert id: '+fromPile[0].id)
+    // console.log('alert id: '+fromPile[0].id)
     /* 
     ChatGPT Explanation:
         .findIndex() loops through each element in the array.
@@ -550,13 +601,64 @@ function dropHandler(event) {
         push(removedItem[0]): This adds the first element of the removedItem array (which is "banana") to targetArray.
         This method effectively moves an item from one array to another while modifying the original array.
     */
-    toPile.push(fromPile.splice(index, 1)[0]);
-    targetDiv.appendChild(document.getElementById(draggedItemId)); 
+
+    if (isStack) {
+        console.log(`Attempting to move stack...`)
+
+        console.log(`fromPile: \n${fromPile}`)
+        console.log(`toPile: \n${toPile}`)
+        console.log(`dragged item index: ${index}`)
+
+        console.log(`fromPile length is: ${fromPile.length}`)
+        console.log(`toPile length is: ${toPile.length}`)
+        console.log(`movePile length is: ${movePile.length}`)
+
+        // for (let i = index + movePile.length; i >= index; i--) {
+        console.log('forward order...........................................')
+        console.log('moving html (card) elements...........................................')
+        for (let i = index; i < index + movePile.length; i++) {
+
+            console.log(`item ${i}: ${fromPile[i]}`)
+            targetDiv.appendChild(document.getElementById(fromPile[i].id));
+
+        }
+        console.log('backward order...........................................')
+        for (let i = index + movePile.length-1; i >= index; i--) {
+            console.log(`item ${i}: ${fromPile[i]}`)
+        }
+        console.log('Before removing items......')
+        console.log(`length of fromPile: ${fromPile.length}`)
+        console.log('removeing array items from "fromPile"...........................................')
+        for (let i = index + movePile.length-1; i >= index; i--) {
 
 
-    // if () {
+            //console.log(fromPile[i].id)
 
-    // }
+            // console.log(`attempting to move card id: ${fromPile[i].id} which is at index: ${i}.`);
+            
+            fromPile.splice(i, 1)[0];
+
+            // targetDiv.appendChild(document.getElementById(fromPile[i].id)); 
+
+
+        }
+        console.log('After removing items......')
+
+        console.log('adding array items to "toPile"...........................................')
+        for (let i = movePile.length-1; i >= 0; i--) {
+            console.log(`moving movePile[i]: ${movePile[i]}`)
+            toPile.push(movePile[i]);
+        }
+
+
+
+        console.log(`length of fromPile: ${fromPile.length}`)
+        movePile = [];
+        isStack = false;
+    } else {
+        toPile.push(fromPile.splice(index, 1)[0]);
+        targetDiv.appendChild(document.getElementById(draggedItemId)); 
+    }
 
     switch (draggedFrom) {
 
@@ -652,6 +754,8 @@ const renderVarStatuses = () => {
     varStatuses.innerHTML += getArrayItems(col5Facedown, 'col5Facedown');
     varStatuses.innerHTML += getArrayItems(col6Facedown, 'col6Facedown');
     varStatuses.innerHTML += getArrayItems(col7Facedown, 'col7Facedown');
+
+    varStatuses.innerHTML += getArrayItems(movePile, 'movePile');
 }
 /* ********************************************************** */
 
