@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solitaire</title>
-    <link rel="stylesheet" href="./css/style.css">
+    
     <link rel="stylesheet" href="./css/card.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
     <script defer src="./js/app.js"></script>
 </head>
@@ -32,17 +33,41 @@
         
         <div class="table-top">
             <div class="stock-pile-container">
+                <div class="stock-pile-circle"></div>
+                <div id="stock-pile"></div>
+                <div id="drawn-pile"></div>
+            </div>
+            <div class="foundation">
+                <div id="clubs"></div>
+                <div id="hearts"></div>
+                <div id="diamonds"></div>
+                <div id="spades"></div>
+            </div>
+        </div>
+        <div class="tableau">
+            <div id="col-1"></div>
+            <div id="col-2"></div>
+            <div id="col-3"></div>
+            <div id="col-4"></div>
+            <div id="col-5"></div>
+            <div id="col-6"></div>
+            <div id="col-7"></div>
+        </div>
+
+
+        <!-- <div class="table-to">
+            <div class="stock-pile-containe">
                 <div id="stock-pile">stock pile</div>
                 <div id="drawn-pile" class="card outline">drawn pile</div>
             </div>
-            <div class="foundation">
+            <div class="foundatio">
                 <div id="clubs" class="card xlarge">clubs</div>
                 <div id="hearts" class="card xlarge">hearts</div>
                 <div id="diamonds" class="card xlarge">diamonds</div>
                 <div id="spades" class="card xlarge">spades</div>
             </div>
         </div>
-        <div class="tableau">
+        <div class="tablea">
             <div id="col-1" class="card xlarge">column 1</div>
             <div id="col-2" class="card xlarge">column 2</div>
             <div id="col-3" class="card xlarge">column 3</div>
@@ -50,7 +75,7 @@
             <div id="col-5" class="card xlarge">column 5</div>
             <div id="col-6" class="card xlarge">column 6</div>
             <div id="col-7" class="card xlarge">column 7</div>
-        </div>
+        </div> -->
 
         
 

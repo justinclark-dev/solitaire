@@ -288,18 +288,18 @@ const clearGame = () => {
 
     stockPileDiv.innerHTML = '';
     drawnPileDiv.innerHTML = '';
-    clubsPileDiv.innerHTML = 'clubs';
-    heartsPileDiv.innerHTML = 'hearts';
-    diamondsPileDiv.innerHTML = 'diamonds';
-    spadesPileDiv.innerHTML = 'spades';
+    clubsPileDiv.innerHTML = '';
+    heartsPileDiv.innerHTML = '';
+    diamondsPileDiv.innerHTML = '';
+    spadesPileDiv.innerHTML = '';
 
-    col1Div.innerHTML = 'column 1';
-    col2Div.innerHTML = 'column 2';
-    col3Div.innerHTML = 'column 3';
-    col4Div.innerHTML = 'column 4';
-    col5Div.innerHTML = 'column 5';
-    col6Div.innerHTML = 'column 6';
-    col7Div.innerHTML = 'column 7';
+    col1Div.innerHTML = '';
+    col2Div.innerHTML = '';
+    col3Div.innerHTML = '';
+    col4Div.innerHTML = '';
+    col5Div.innerHTML = '';
+    col6Div.innerHTML = '';
+    col7Div.innerHTML = '';
 
     deck = [];
     stockPile = [];
