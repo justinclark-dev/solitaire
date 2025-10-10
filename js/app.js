@@ -219,7 +219,7 @@ const createCard = (c, cardDiv, frontBack) => {
         div.setAttribute('id', id);
         div.setAttribute('draggable', true);
         div.classList.add('card');
-        div.classList.add('large');
+        div.classList.add('xlarge');
         div.classList.add('front');
         div.classList.add(cardClass);
 
@@ -230,9 +230,10 @@ const createCard = (c, cardDiv, frontBack) => {
         div.addEventListener('drop', dropHandler);
     } else if (frontBack === 'back') {
 
-        div.setAttribute('id', 'TemporaryIDis-'+id);
+        div.setAttribute('id', 'id-'+id);
+        // div.setAttribute('id', id);
         div.classList.add('card');
-        div.classList.add('large');
+        div.classList.add('xlarge');
         div.classList.add('back-blue');
         div.classList.add('shadow');
         div.classList.add('back');
@@ -421,7 +422,7 @@ function dropHandler(event) {
         console.log('topCardObj: '+topCardObj.suit)
 
         // alert('targetId in card: '+targetId)
-
+        const charArr = [...targetId];
         switch (targetId) {
             case 'clubs':
             case 'hearts':
@@ -483,6 +484,10 @@ function dropHandler(event) {
 
         } // <== end switch()
 
+
+
+
+
     } else {
 
         // alert('targetId (column supposed to be empty?): '+targetId)
@@ -532,7 +537,7 @@ function dropHandler(event) {
     let toPile = getDestinationArray(targetId);
 
     /* 
-    Explanation:
+    ChatGPT Explanation:
         .findIndex() loops through each element in the array.
         For each element (obj), it checks whether obj.id === "001".
         It returns the index of the first matching object (or -1 if none match).
@@ -540,13 +545,42 @@ function dropHandler(event) {
     const index = fromPile.findIndex(obj => obj.id === draggedItemId);
     
     /*
-    Explanation of the Code
+    ChatGPT Explanation
         splice(1, 1): This removes one item at index 1 from sourceArray, which is "banana". The removed item is returned as an array.
         push(removedItem[0]): This adds the first element of the removedItem array (which is "banana") to targetArray.
         This method effectively moves an item from one array to another while modifying the original array.
     */
     toPile.push(fromPile.splice(index, 1)[0]);
     targetDiv.appendChild(document.getElementById(draggedItemId)); 
+
+
+    // if () {
+
+    // }
+
+    switch (draggedFrom) {
+
+        // case 'col-1': flipCard(col1Facedown, col1Faceup, col1Div); break;
+        case 'col-2': flipCard(col2Facedown, col2Faceup, col2Div); break;
+        case 'col-3': flipCard(col3Facedown, col3Faceup, col3Div); break;
+        case 'col-4': flipCard(col4Facedown, col4Faceup, col4Div); break;
+        case 'col-5': flipCard(col5Facedown, col5Faceup, col5Div); break;
+        case 'col-6': flipCard(col6Facedown, col6Faceup, col6Div); break;
+        case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;
+            // flipCard(col7Facedown, col7Faceup, col7Div);
+            // if (col7Faceup.length === 0) {
+            //     const arrItem = col7Facedown[col7Facedown.length - 1];
+            //     const id = `id-${arrItem.suit}${arrItem.rank}`;
+            //     const element = document.getElementById(id);
+            //     element.remove();
+            //     createCard(arrItem, col7Div, 'front');
+            //     col7Faceup.push(col7Facedown.pop());
+            // }
+            
+    }
+
+    
+
 
     // console.log(fromPile.length)
     // console.log(toPile.length)
@@ -563,7 +597,16 @@ function dropHandler(event) {
 }
 /*************************************************************************/
 
-
+const flipCard = (fromPile, toPile, colDiv) => {
+    if (toPile.length === 0 && fromPile.length !== 0) {
+        const arrItem = fromPile[fromPile.length - 1];
+        const id = `id-${arrItem.suit}${arrItem.rank}`;
+        const element = document.getElementById(id);
+        element.remove();
+        createCard(arrItem, colDiv, 'front');
+        toPile.push(fromPile.pop());
+    }
+}
 
 
 /* ********************************************************** */
