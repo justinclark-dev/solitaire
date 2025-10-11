@@ -118,6 +118,8 @@ nav .center-nav > div {
     align-items: start;
     gap: 10px;
     border: 1px solid lime;
+    zoom: 80%;
+    /* display: none; */
 }
 #var-statuses div {
     border: 1px solid lime;
@@ -146,7 +148,22 @@ nav .center-nav > div {
 #col-6,
 #col-7 {
     min-width: 167px;
-    height: 231px;
+
+
+
+
+
+
+    min-height: 231px;
+    /* height: 231px; */
+
+
+
+
+
+
+
+
     /* outline: 1px solid red; */
     overflow: visible;
     border-radius: 0.5em;

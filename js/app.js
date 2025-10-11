@@ -37,9 +37,11 @@ let col7Facedown = [];
 
 let movePile = [];
 
-let gameTimeStarted = 0;
-let gameTimeStopped = 0;
+let gameTimeStarted;
+let gameTimeStopped;
 let isGameRunning = false;
+
+let gameScore = 0;
 
 /*------------------------ Cached Element References ------------------------*/
 
@@ -283,53 +285,58 @@ const renderCards = () => {
 
 
 
-gameTimeStarted = new Date();
+
 
 const renderTimePlaying = () => {
 
-    let endTime = new Date();
-    let elapsed = endTime - gameTimeStarted; // time in milliseconds
+    /*
+    Browser Search Assist:
 
-    let seconds = Math.floor((elapsed / 1000) % 60);
-    let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
-    let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+        To show elapsed time in hours, minutes, and seconds in JavaScript, 
+        you can calculate the difference between two Date objects and then 
+        convert the result from milliseconds to the desired format. 
+        
+        For example:
 
-    if (seconds < 10) seconds = `0${seconds}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-    if (hours < 10) hours = `0${hours}`;
+            let startTime = new Date();
+            // Perform some task
+            let endTime = new Date();
+            let elapsed = endTime - startTime; // time in milliseconds
 
-    const timeString = `${hours}:${minutes}:${seconds}`;
-    const timePlaying = document.getElementById('time-playing');
+            let seconds = Math.floor((elapsed / 1000) % 60);
+            let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+            let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
 
-    timePlaying.innerHTML = timeString;
+        console.log(`${hours} hours, ${minutes} minutes, ${seconds} seconds`);
+        This will display the elapsed time in a readable format.
+    */
+   if (isGameRunning) {
+        let endTime = new Date();
+        let elapsed = endTime - gameTimeStarted; // time in milliseconds
 
+        let seconds = Math.floor((elapsed / 1000) % 60);
+        let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+        let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
 
-    // console.log(`${minutes} minutes : ${seconds} seconds`);
+        if (seconds < 10) seconds = `0${seconds}`;
+        if (minutes < 10) minutes = `0${minutes}`;
+        if (hours < 10) hours = `0${hours}`;
+
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        const timePlaying = document.getElementById('time-playing');
+
+        timePlaying.innerHTML = timeString;
+
+   }
+
 
 
 }
-setInterval(renderTimePlaying, 1000);
 
 
 
 
 
-// let startTime = Date.now(); // Record the start time
-
-// function updateElapsedTime() {
-//     let currentTime = Date.now(); // Get the current time
-//     let elapsedTime = Math.floor((currentTime - startTime) / 1000); // Calculate elapsed time in seconds
-//     document.getElementById("elapsedTime").innerHTML = `${elapsedTime} seconds`; // Update the display
-// }
-
-// // Update the elapsed time every second
-// setInterval(updateElapsedTime, 1000);
-
-
-
-// gameTimeStarted = new Date.now();
-
-isGameRunning = true;
 
 
 
@@ -341,7 +348,9 @@ const newGame = (event) => {
     dealCards();
     renderCards();
 
-
+    isGameRunning = true;
+    gameTimeStarted = new Date();
+    setInterval(renderTimePlaying, 1000);
 
 
     
@@ -403,7 +412,6 @@ const clearGame = () => {
 // Drag and Drop source:
 // https://www.w3schools.com/HTML/html5_draganddrop.asp
 
-//let parentId = '';
 let draggedFromParentId = '';
 let draggedItemId = '';
 let isStack = false;
@@ -436,14 +444,10 @@ const fillMovePile = (fromPile) => {
 }
 
 function dragstartHandler(event) {
-    //event.dataTransfer.setData("text", event.target.id);
     
     draggedFromParentId = event.target.parentElement.id;
     draggedItemId = event.target.id;
 
-    // movePile
-  
-    
     let fromPile;
     switch (draggedFromParentId) {
         case 'col-1': fillMovePile(col1Faceup); break;
@@ -461,11 +465,7 @@ function dragstartHandler(event) {
 function dragoverHandler(event) {
     event.preventDefault();
     console.log('hovering...');
-
-
-    
 }
-
 
 const getOriginationArray = (arr) => {
     switch (arr) {
@@ -517,7 +517,6 @@ function dropHandler(event) {
 
     console.log(draggedCardValue)
 
-    
     if (targetChild.classList.contains('card')) {
         // the pile already has cards
 
@@ -529,9 +528,6 @@ function dropHandler(event) {
         const topCardObj = getRankSuit(topCardId);
         const topCardValue = getCardValue(topCardObj);
 
-        // alert('topCardValue: '+topCardValue)
-        // alert('draggedCardValue: '+draggedCardValue)
-
         console.log('topCardObj: '+topCardObj.suit)
 
         // alert('targetId in card: '+targetId)
@@ -541,23 +537,23 @@ function dropHandler(event) {
             case 'hearts':
             case 'diamonds':
             case 'spades':
-                // enforce ascending order
+                // enforce rank ascending order
+                // dragged and dropped card cannot be lower in rank than the card it goes on
                 if (draggedCardValue <= topCardValue) {
                     // alert('Must be next rank in accending order!')
                     return
-                } else if ((draggedCardValue - topCardValue) !== 1) {
-                    // alert('Must be the next number 1 away')
+                } 
+                // must be next up in chronological order
+                // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
+                // in this instance we are checking that the dropped card is one rank higher than the top card
+                else if ((draggedCardValue - topCardValue) !== 1) {
                     return
                 }
-
+                // enforce suit of card matches suit of pile
                 if (charArr[0] !== draggedCardObj.suit) {
-                    // alert('Suit of card must match suit of pile!')
                     return;
                 }
-
                 break;
-        // }
-        // switch (targetId) {
             case 'col-1':
             case 'col-2':
             case 'col-3':
@@ -565,59 +561,49 @@ function dropHandler(event) {
             case 'col-5':
             case 'col-6':
             case 'col-7':
-
-                // enforce descending order
+                // enforce rank descending order
+                // dragged and dropped card cannot be higher in rank than the card it goes on
                 if (draggedCardValue >= topCardValue) {
-                    // alert('Must be next rank in decending order!')
                     return
-                } else if ((topCardValue - draggedCardValue) !== 1) {
-                    // alert('Must be the next number 1 away')
+                } 
+                // must be next down in chronological order
+                // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
+                // in this instance we are checking that the top card is one rank higher than the dropped card
+                else if ((topCardValue - draggedCardValue) !== 1) {
                     return
                 }
-
                 // enforce alternating suit colors
                 if (draggedCardObj.suit === 'h' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
-                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 'd' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
-                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 'c' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
-                    // alert('Color of suit must alternate!')
                     return;
                 }
                 if (draggedCardObj.suit === 's' && (topCardObj.suit === 'c' || topCardObj.suit === 's')) {
-                    // alert('Color of suit must alternate!')
                     return;
                 }
-               
                 break;
-
         } // <== end switch()
-
-
-
-
-
-    } else {
-
-        // alert('targetId (column supposed to be empty?): '+targetId)
-
-        // the pile is empty
+    } 
+    // else the pile is empty
+    else {
         targetId = targetChild.id;
         draggedFrom = draggedFromParentId;
         targetDiv = targetChild;
 
         switch (targetId) {
+            // foundation piles
             case 'clubs':
             case 'hearts':
             case 'diamonds':
             case 'spades':
                 const charArr = [...targetId];
+                // check that suit of card must match suit of pile
                 if (charArr[0] !== draggedCardObj.suit) {
-                    // alert('Suit of card must match suit of pile!')
+                    // alert('!')
                     return;
                 }
                 if (draggedCardValue !== 1) {
@@ -625,9 +611,7 @@ function dropHandler(event) {
                     return;
                 }
                 break;
-        // }
-
-        // switch (targetId) {
+            // tableau column piles
             case 'col-1':
             case 'col-2':
             case 'col-3':
@@ -635,23 +619,17 @@ function dropHandler(event) {
             case 'col-5':
             case 'col-6':
             case 'col-7':
-                // enforce only kings in empty columns
+                // enforce only kings allowed in empty columns
                 if (draggedCardValue !== 13) {
-                    // alert('Only Kings are allowed in empty columns!')
                     return;
                 }
                 break;
         }
-
-
     }
 
     let fromPile = getOriginationArray(draggedFrom);
     let toPile = getDestinationArray(targetId);
 
-
-    // alert('alert id: '+fromPile[0].id)
-    // console.log('alert id: '+fromPile[0].id)
     /* 
     ChatGPT Explanation:
         .findIndex() loops through each element in the array.
@@ -661,101 +639,59 @@ function dropHandler(event) {
     const index = fromPile.findIndex(obj => obj.id === draggedItemId);
     
     /*
+    For the 2 "fromPile.splice(i, 1)[0]", the "[0]" part is a little confusing... need to review it again.
     ChatGPT Explanation
         splice(1, 1): This removes one item at index 1 from sourceArray, which is "banana". The removed item is returned as an array.
         push(removedItem[0]): This adds the first element of the removedItem array (which is "banana") to targetArray.
         This method effectively moves an item from one array to another while modifying the original array.
     */
-
+    // we are moving a stack of multiple cards
     if (isStack) {
-        console.log(`Attempting to move stack...`)
-
-        console.log(`fromPile: \n${fromPile}`)
-        console.log(`toPile: \n${toPile}`)
-        console.log(`dragged item index: ${index}`)
-
-        console.log(`fromPile length is: ${fromPile.length}`)
-        console.log(`toPile length is: ${toPile.length}`)
-        console.log(`movePile length is: ${movePile.length}`)
-
-        // for (let i = index + movePile.length; i >= index; i--) {
-        console.log('forward order...........................................')
-        console.log('moving html (card) elements...........................................')
+        // moving html (card) elements
         for (let i = index; i < index + movePile.length; i++) {
-
             console.log(`item ${i}: ${fromPile[i]}`)
             targetDiv.appendChild(document.getElementById(fromPile[i].id));
-
         }
-        console.log('backward order...........................................')
+        
+        // removeing array items from "fromPile"
         for (let i = index + movePile.length-1; i >= index; i--) {
-            console.log(`item ${i}: ${fromPile[i]}`)
+            fromPile.splice(i, 1)[0]; // <== ChatGPT help*
         }
-        console.log('Before removing items......')
-        console.log(`length of fromPile: ${fromPile.length}`)
-        console.log('removeing array items from "fromPile"...........................................')
-        for (let i = index + movePile.length-1; i >= index; i--) {
-
-
-            //console.log(fromPile[i].id)
-
-            // console.log(`attempting to move card id: ${fromPile[i].id} which is at index: ${i}.`);
-            
-            fromPile.splice(i, 1)[0];
-
-            // targetDiv.appendChild(document.getElementById(fromPile[i].id)); 
-
-
-        }
-        console.log('After removing items......')
-
-        console.log('adding array items to "toPile"...........................................')
+     
+        // adding array items to "toPile"
         for (let i = movePile.length-1; i >= 0; i--) {
             console.log(`moving movePile[i]: ${movePile[i]}`)
             toPile.push(movePile[i]);
         }
 
-
-
-        console.log(`length of fromPile: ${fromPile.length}`)
+        // do we still need these
         movePile = [];
         isStack = false;
-    } else {
-        toPile.push(fromPile.splice(index, 1)[0]);
+    } 
+    // we are only moving a single card (not a stack)
+    else {
+
+        toPile.push(fromPile.splice(index, 1)[0]); // <== ChatGPT help*
         targetDiv.appendChild(document.getElementById(draggedItemId)); 
     }
 
+    // when the last faceup card is gone from a pile we automatically filp the first facedown card
     switch (draggedFrom) {
 
-        // case 'col-1': flipCard(col1Facedown, col1Faceup, col1Div); break;
+        // col-1 has no facedown cards
         case 'col-2': flipCard(col2Facedown, col2Faceup, col2Div); break;
         case 'col-3': flipCard(col3Facedown, col3Faceup, col3Div); break;
         case 'col-4': flipCard(col4Facedown, col4Faceup, col4Div); break;
         case 'col-5': flipCard(col5Facedown, col5Faceup, col5Div); break;
         case 'col-6': flipCard(col6Facedown, col6Faceup, col6Div); break;
         case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;
-            // flipCard(col7Facedown, col7Faceup, col7Div);
-            // if (col7Faceup.length === 0) {
-            //     const arrItem = col7Facedown[col7Facedown.length - 1];
-            //     const id = `id-${arrItem.suit}${arrItem.rank}`;
-            //     const element = document.getElementById(id);
-            //     element.remove();
-            //     createCard(arrItem, col7Div, 'front');
-            //     col7Faceup.push(col7Facedown.pop());
-            // }
             
     }
-
-    
-
-
-    // console.log(fromPile.length)
-    // console.log(toPile.length)
 
 
     // for testing
     renderVarStatuses();
-
+    ////////////////////////////////////////////////////////////////////////////////////////////
     // DETECT WINNING GAME
     const clubsFull = clubsPile.length === 13;
     const diamondsFull = diamondsPile.length === 13;
@@ -764,13 +700,53 @@ function dropHandler(event) {
 
     // if (clubsFull===true && diamondsFull===true && spadesFull===true && heartsFull===true) {
     if (clubsFull && diamondsFull && spadesFull && heartsFull) {
-
-        alert('You win!')
+  
         gameTimeStopped = new Date();
-        isGameRunning = false();
+        isGameRunning = false;
+
+
+        let endTime = new Date();
+        let elapsed = endTime - gameTimeStarted; // time in milliseconds
+
+        let seconds = Math.floor((elapsed / 1000) % 60);
+        let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+        let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+
+        if (seconds < 10) seconds = `0${seconds}`;
+        if (minutes < 10) minutes = `0${minutes}`;
+        if (hours < 10) hours = `0${hours}`;
+
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        const timePlaying = document.getElementById('time-playing');
+
+        timePlaying.innerHTML = timeString;
+
+        alert(`You win!  And it only took: ${timeString}!`)
 
     }
-    
+                
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // SCORE
+
+    /*
+        In Standard Klondike, earn 10 points for moving cards to the foundation, 
+        and 5 points for uncovering face-down cards or moving cards from the stock pile.
+
+        Bonus Points
+        Complete the game quickly to earn bonus points! Bonus points are calculated by 
+        dividing 700,000 by the total game in seconds.
+    */
+
+    // 10 points for moving cards to the foundation
+    // 5 points for uncovering face-down cards
+    // 5 points for moving cards from the stock pile
+
+    // Bonus Points
+    // divide 700,000 by the total game in seconds
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
     event.stopPropagation();
     
