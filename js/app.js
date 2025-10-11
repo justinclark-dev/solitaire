@@ -8,6 +8,8 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 // const suits = ['s'];
 // const ranks = ['A','K','J'];
 
+
+
 /*-------------------------------- Variables --------------------------------*/
 
 let deck = [];
@@ -43,9 +45,18 @@ let isGameRunning = false;
 
 let gameScore = 0;
 
+let draggedFromParentId = '';
+let draggedItemId = '';
+let isStack = false;
+
+let grantFilpCardPoints = false;
+
+
 /*------------------------ Cached Element References ------------------------*/
 
-const copyYear = document.querySelector('#year');
+
+const gameScoreDiv = document.getElementById('game-score');
+const timePlaying = document.getElementById('time-playing');
 const newGameBtn = document.querySelector('#new-game');
 // stock pile container
 const stockPileDiv = document.querySelector('#stock-pile');
@@ -65,6 +76,7 @@ const col6Div = document.querySelector('#col-6');
 const col7Div = document.querySelector('#col-7');
 
 const varStatuses = document.querySelector('#var-statuses');
+const copyYear = document.querySelector('#year');
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -323,8 +335,6 @@ const renderTimePlaying = () => {
         if (hours < 10) hours = `0${hours}`;
 
         const timeString = `${hours}:${minutes}:${seconds}`;
-        const timePlaying = document.getElementById('time-playing');
-
         timePlaying.innerHTML = timeString;
 
    }
@@ -397,10 +407,22 @@ const clearGame = () => {
     col5Facedown = [];
     col6Facedown = [];
     col7Facedown = [];
+    movePile = [];
+
+
+    draggedFromParentId = '';
+    draggedItemId = '';
+    isStack = false;
 
     gameTimeStarted = 0;
     gameTimeStopped = 0;
     isGameRunning = false;
+
+    grantFilpCardPoints = false;
+    gameScore = 0;
+    gameScoreDiv.innerHTML = '';
+
+
 }
 
 
@@ -412,9 +434,6 @@ const clearGame = () => {
 // Drag and Drop source:
 // https://www.w3schools.com/HTML/html5_draganddrop.asp
 
-let draggedFromParentId = '';
-let draggedItemId = '';
-let isStack = false;
 
 const fillMovePile = (fromPile) => {
     
@@ -500,10 +519,32 @@ const getDestinationArray = (arr) => {
     }
 }
 
+
+
 function dropHandler(event) {
     event.preventDefault();
 
     // alert('event.stopPropagation()... not stopping!')
+
+    const drawnPileLenBefore = drawnPile.length;
+    
+    const clubsPileLenBefore = clubsPile.length;
+    const heartsPileLenBefore = heartsPile.length;
+    const diamondsPileLenBefore = diamondsPile.length;
+    const spadesPileLenBefore = spadesPile.length;
+
+    const col2FacedownLenBefore = col2Facedown.length;
+    const col3FacedownLenBefore = col3Facedown.length;
+    const col4FacedownLenBefore = col4Facedown.length;
+    const col5FacedownLenBefore = col5Facedown.length;
+    const col6FacedownLenBefore = col6Facedown.length;
+    const col7FacedownLenBefore = col7Facedown.length;
+
+    // 10 points for moving cards to the foundation
+    // 5 points for uncovering face-down cards
+    // 5 points for moving cards from the stock pile
+    let grantFoundationPoints = false;
+    
 
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
@@ -517,8 +558,8 @@ function dropHandler(event) {
 
     console.log(draggedCardValue)
 
-    if (targetChild.classList.contains('card')) {
-        // the pile already has cards
+    // these are the rules for piles that already have cards in them
+    if (targetChild.classList.contains('card')) {    
 
         targetId = targetParent.id;
         draggedFrom = draggedFromParentId;
@@ -528,11 +569,10 @@ function dropHandler(event) {
         const topCardObj = getRankSuit(topCardId);
         const topCardValue = getCardValue(topCardObj);
 
-        console.log('topCardObj: '+topCardObj.suit)
-
-        // alert('targetId in card: '+targetId)
+        // check the destination pile
         const charArr = [...targetId];
         switch (targetId) {
+            // foundation piles
             case 'clubs':
             case 'hearts':
             case 'diamonds':
@@ -541,19 +581,22 @@ function dropHandler(event) {
                 // dragged and dropped card cannot be lower in rank than the card it goes on
                 if (draggedCardValue <= topCardValue) {
                     // alert('Must be next rank in accending order!')
-                    return
+                    return; 
                 } 
                 // must be next up in chronological order
                 // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
                 // in this instance we are checking that the dropped card is one rank higher than the top card
                 else if ((draggedCardValue - topCardValue) !== 1) {
-                    return
+                    return;
                 }
                 // enforce suit of card matches suit of pile
                 if (charArr[0] !== draggedCardObj.suit) {
                     return;
                 }
+                // if running code make it here the user successfully moved a card to the foundation pile
+                grantFoundationPoints = true;
                 break;
+            // tableau column piles
             case 'col-1':
             case 'col-2':
             case 'col-3':
@@ -564,13 +607,13 @@ function dropHandler(event) {
                 // enforce rank descending order
                 // dragged and dropped card cannot be higher in rank than the card it goes on
                 if (draggedCardValue >= topCardValue) {
-                    return
+                    return;
                 } 
                 // must be next down in chronological order
                 // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
                 // in this instance we are checking that the top card is one rank higher than the dropped card
                 else if ((topCardValue - draggedCardValue) !== 1) {
-                    return
+                    return;
                 }
                 // enforce alternating suit colors
                 if (draggedCardObj.suit === 'h' && (topCardObj.suit === 'h' || topCardObj.suit === 'd')) {
@@ -588,28 +631,31 @@ function dropHandler(event) {
                 break;
         } // <== end switch()
     } 
-    // else the pile is empty
+    // else: these are the rules for empty piles
     else {
         targetId = targetChild.id;
         draggedFrom = draggedFromParentId;
         targetDiv = targetChild;
 
+        // check the destination pile
         switch (targetId) {
             // foundation piles
+            // only Aces are allowed in empty foundation piles
             case 'clubs':
             case 'hearts':
             case 'diamonds':
             case 'spades':
                 const charArr = [...targetId];
-                // check that suit of card must match suit of pile
+                // enforce suit of card must match suit of pile
                 if (charArr[0] !== draggedCardObj.suit) {
-                    // alert('!')
                     return;
                 }
+                // enforce only Aces are allowed
                 if (draggedCardValue !== 1) {
-                    // alert('Only Aces are allowed!')
                     return;
                 }
+                // if running code make it here the user successfully moved an Ace to the foundation pile
+                grantFoundationPoints = true;
                 break;
             // tableau column piles
             case 'col-1':
@@ -619,13 +665,14 @@ function dropHandler(event) {
             case 'col-5':
             case 'col-6':
             case 'col-7':
-                // enforce only kings allowed in empty columns
+                // enforce only kings allowed in empty tableau columns
                 if (draggedCardValue !== 13) {
                     return;
                 }
                 break;
         }
     }
+
 
     let fromPile = getOriginationArray(draggedFrom);
     let toPile = getDestinationArray(targetId);
@@ -677,52 +724,14 @@ function dropHandler(event) {
 
     // when the last faceup card is gone from a pile we automatically filp the first facedown card
     switch (draggedFrom) {
-
+        // we check for and award point for flipping card in the flipCard function
         // col-1 has no facedown cards
         case 'col-2': flipCard(col2Facedown, col2Faceup, col2Div); break;
         case 'col-3': flipCard(col3Facedown, col3Faceup, col3Div); break;
         case 'col-4': flipCard(col4Facedown, col4Faceup, col4Div); break;
         case 'col-5': flipCard(col5Facedown, col5Faceup, col5Div); break;
         case 'col-6': flipCard(col6Facedown, col6Faceup, col6Div); break;
-        case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;
-            
-    }
-
-
-    // for testing
-    renderVarStatuses();
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    // DETECT WINNING GAME
-    const clubsFull = clubsPile.length === 13;
-    const diamondsFull = diamondsPile.length === 13;
-    const spadesFull = spadesPile.length === 13;
-    const heartsFull = heartsPile.length === 13;
-
-    // if (clubsFull===true && diamondsFull===true && spadesFull===true && heartsFull===true) {
-    if (clubsFull && diamondsFull && spadesFull && heartsFull) {
-  
-        gameTimeStopped = new Date();
-        isGameRunning = false;
-
-
-        let endTime = new Date();
-        let elapsed = endTime - gameTimeStarted; // time in milliseconds
-
-        let seconds = Math.floor((elapsed / 1000) % 60);
-        let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
-        let hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
-
-        if (seconds < 10) seconds = `0${seconds}`;
-        if (minutes < 10) minutes = `0${minutes}`;
-        if (hours < 10) hours = `0${hours}`;
-
-        const timeString = `${hours}:${minutes}:${seconds}`;
-        const timePlaying = document.getElementById('time-playing');
-
-        timePlaying.innerHTML = timeString;
-
-        alert(`You win!  And it only took: ${timeString}!`)
-
+        case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;  
     }
                 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -743,10 +752,100 @@ function dropHandler(event) {
 
     // Bonus Points
     // divide 700,000 by the total game in seconds
+    
+    const drawnPileLenAfter = drawnPile.length;
 
+    const clubsPileLenAfter = clubsPile.length;
+    const heartsPileLenAfter = heartsPile.length;
+    const diamondsPileLenAfter = diamondsPile.length;
+    const spadesPileLenAfter = spadesPile.length;
 
+    const col2FacedownLenAfter = col2Facedown.length;
+    const col3FacedownLenAfter = col3Facedown.length;
+    const col4FacedownLenAfter = col4Facedown.length;
+    const col5FacedownLenAfter = col5Facedown.length;
+    const col6FacedownLenAfter = col6Facedown.length;
+    const col7FacedownLenAfter = col7Facedown.length;
 
+    // grant 5 points for moving cards from the stock pile
+    if (drawnPileLenAfter < drawnPileLenBefore) {
+        gameScore += 5;
+    }
+
+    // grant 10 points for moving cards to the foundation
+    if (grantFoundationPoints===true) {
+        if (clubsPileLenAfter > clubsPileLenBefore) {
+            gameScore += 10;
+        }
+        if (heartsPileLenAfter > heartsPileLenBefore) {
+            gameScore += 10;
+        }
+        if (diamondsPileLenAfter > diamondsPileLenBefore) {
+            gameScore += 10;
+        }
+        if (spadesPileLenAfter > spadesPileLenBefore) {
+            gameScore += 10;
+        }
+    }
+
+    // grant 5 points for uncovering face-down cards
+    if (grantFilpCardPoints===true) {
+        // col-1 never has facedown cards
+        if (col2FacedownLenAfter < col2FacedownLenBefore) {
+            gameScore += 5;
+        }
+        if (col3FacedownLenAfter < col3FacedownLenBefore) {
+            gameScore += 5;
+        }
+        if (col4FacedownLenAfter < col4FacedownLenBefore) {
+            gameScore += 5;
+        }
+        if (col5FacedownLenAfter < col5FacedownLenBefore) {
+            gameScore += 5;
+        }
+        if (col6FacedownLenAfter < col6FacedownLenBefore) {
+            gameScore += 5;
+        }
+        if (col7FacedownLenAfter < col7FacedownLenBefore) {
+            gameScore += 5;
+        }
+
+    }
+ 
     ////////////////////////////////////////////////////////////////////////////////////////////
+    // DETECT WINNING GAME
+    const clubsFull = clubsPile.length === 13;
+    const diamondsFull = diamondsPile.length === 13;
+    const spadesFull = spadesPile.length === 13;
+    const heartsFull = heartsPile.length === 13;
+
+    
+    if (clubsFull && diamondsFull && spadesFull && heartsFull) {
+  
+        isGameRunning = false;
+
+        gameTimeStopped = new Date();
+        let totalGameElapsed = gameTimeStopped - gameTimeStarted; // time in milliseconds
+        let totalGameSeconds = Math.floor((totalGameElapsed / 1000));
+
+        /*Bonus Points
+        Complete the game quickly to earn bonus points! Bonus points are calculated by 
+        dividing 700,000 by the total game in seconds.*/
+        // 
+        const pointsMultiplier = 700_000;
+        const bonusPoints = Math.floor(pointsMultiplier / totalGameSeconds);
+        gameScore += bonusPoints;
+
+        alert(`You win!  And it only took: ${timeString}!`)
+
+    }
+
+    
+    gameScoreDiv.innerText = gameScore;
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    // for testing
+    renderVarStatuses();
 
     event.stopPropagation();
     
@@ -762,6 +861,8 @@ const flipCard = (fromPile, toPile, colDiv) => {
         element.remove();
         createCard(arrItem, colDiv, 'front');
         toPile.push(fromPile.pop());
+        // if running code make it here a facedown card was flipped, user gets points
+        grantFilpCardPoints = true;
     }
 }
 
