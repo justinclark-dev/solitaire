@@ -506,6 +506,8 @@ const fillMovePile = (fromPile) => {
 
 function dragstartHandler(event) {
 
+    
+
     draggedFromParentId = event.target.parentElement.id;
     draggedItemId = event.target.id;
 
@@ -518,6 +520,14 @@ function dragstartHandler(event) {
         case 'col-5': fillMovePile(col5Faceup); break;
         case 'col-6': fillMovePile(col6Faceup); break;
         case 'col-7': fillMovePile(col7Faceup); break;
+        case 'drawn-pile':       
+            // only allow picking up the last card of the drawn cards pile
+            const lastDrawnCard = drawnPile[drawnPile.length-1];
+            if (draggedItemId !== lastDrawnCard.id) {
+                alert('You can only move the last drawn card!')
+                return;
+            }
+            break
     }
 
     renderVarStatuses();
@@ -563,7 +573,7 @@ const getDestinationArray = (arr) => {
 
 
 
-function dropHandler(event) {
+const dropHandler = (event) => {
     event.preventDefault();
 
     // alert('event.stopPropagation()... not stopping!')
@@ -600,6 +610,9 @@ function dropHandler(event) {
 
     console.log(draggedCardValue)
 
+
+
+
     // these are the rules for piles that already have cards in them
     if (targetChild.classList.contains('card')) {
 
@@ -614,6 +627,9 @@ function dropHandler(event) {
         // check the destination pile
         const charArr = [...targetId];
         switch (targetId) {
+            case 'drawn-pile':
+                // don't allow dropping cards back to drawn-pile
+                return
             // foundation piles
             case 'clubs':
             case 'hearts':
@@ -646,6 +662,12 @@ function dropHandler(event) {
             case 'col-5':
             case 'col-6':
             case 'col-7':
+                // only allow dropping on the last card of the stack
+                const toPileDestination = getDestinationArray(targetId);
+                const bottomCard = toPileDestination[toPileDestination.length-1];
+                if (targetChild.id !== bottomCard.id) {
+                    return;
+                }
                 // enforce rank descending order
                 // dragged and dropped card cannot be higher in rank than the card it goes on
                 if (draggedCardValue >= topCardValue) {
@@ -851,7 +873,6 @@ function dropHandler(event) {
         if (col7FacedownLenAfter < col7FacedownLenBefore) {
             gameScore += 5;
         }
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -860,7 +881,6 @@ function dropHandler(event) {
     const diamondsFull = diamondsPile.length === 13;
     const spadesFull = spadesPile.length === 13;
     const heartsFull = heartsPile.length === 13;
-
 
     if (clubsFull && diamondsFull && spadesFull && heartsFull) {
 
@@ -878,9 +898,6 @@ function dropHandler(event) {
         const bonusPoints = Math.floor(pointsMultiplier / totalGameSeconds);
         gameScore += bonusPoints;
 
-       
-
-        
         const winTime = document.getElementById('win-time');
         const winScore = document.getElementById('win-score');
         
@@ -890,7 +907,6 @@ function dropHandler(event) {
 
     }
 
-
     gameScoreDiv.innerText = gameScore;
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -898,7 +914,6 @@ function dropHandler(event) {
     renderVarStatuses();
 
     event.stopPropagation();
-
 
 }
 /*************************************************************************/
