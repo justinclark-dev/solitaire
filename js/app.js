@@ -1,40 +1,17 @@
 ///////////////////////////////////////////////////////////////
-// routing
+// modals
 const main = document.querySelector('main');
 const gameWinModal = document.getElementById('game-win-modal');
 const gameRulesModal = document.getElementById('game-rules-modal');
+const gameRulesOpenBtn = document.getElementById('game-rules-open');
+const gameRulesCloseBtn = document.getElementById('game-rules-close');
 
 
-// get everything after the hash (#) in the url
+const splashPage = document.getElementById('splash-page');
+const enterSiteBtn = document.getElementById('enter-site');
 
-// function getHomePage() {
-//     return `<h1>Welcome Home</h1><p>This is our SPA home page.</p>`;
-// }
-// function getAboutPage() {
-//     return `<h1>About Us</h1><p>Learn about our company.</p>`;
-// }
+const scoreContainer = document.getElementById('score-container');
 
-
-// const getRulesPage = () => {
-//     return `RULES PAGE`;
-// }
-
-// window.addEventListener('hashchange', () => {
-
-    
-//     const page = location.hash.slice(1) || '/';
-
-//     if (page === '/win') {
-//         //main.style.display = 'none'
-//         gameWinModal.style.display = 'grid'
-//     } else if (page === '/rules') {
-//         main.innerHTML = getAboutPage();
-//     } else {
-//         main.style.display = 'grid';
-//     }
-
- 
-// });
 
 ///////////////////////////////////////////////////////////////
 
@@ -404,7 +381,8 @@ const newGame = (event) => {
     gameTimeStarted = new Date();
     setInterval(renderTimePlaying, 1000);
 
-
+    gameScoreDiv.innerHTML = '0';
+    scoreContainer.style.display = 'flex';
 
 }
 
@@ -462,7 +440,7 @@ const clearGame = () => {
 
     grantFilpCardPoints = false;
     gameScore = 0;
-    gameScoreDiv.innerHTML = '';
+    gameScoreDiv.innerHTML = gameScore;
 
 
 }
@@ -471,6 +449,25 @@ const closeWinModal = (event) => {
     gameWinModal.style.display = 'none'
 }
 winOkBtn.addEventListener('click', closeWinModal);
+
+const closeRulesModal = (event) => {
+    gameRulesModal.style.display = 'none'
+}
+
+gameRulesCloseBtn.addEventListener('click', closeRulesModal);
+
+const openRulesModal = (event) => {
+    
+    gameRulesModal.style.display = 'grid';
+}
+gameRulesOpenBtn.addEventListener('click', openRulesModal);
+
+const closeSplashPage = (event) => {
+    
+    splashPage.style.display = 'none';
+}
+enterSiteBtn.addEventListener('click', closeSplashPage);
+
 
 /************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
@@ -881,7 +878,7 @@ function dropHandler(event) {
         const bonusPoints = Math.floor(pointsMultiplier / totalGameSeconds);
         gameScore += bonusPoints;
 
-        alert(`You win!  And it only took: ${timeString}!`)
+       
 
         
         const winTime = document.getElementById('win-time');

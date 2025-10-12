@@ -1,47 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solitaire</title>
-    
+
     <link rel="stylesheet" href="./css/card.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
     <script defer src="./js/app.js"></script>
 </head>
-<body>
+
+<body class="green-table">
 
     <nav>
         <div class="left-nav">
             <button id="new-game">Start New Game</button>
-            <a href="#/win">win</a>
-            <a href="#/play">play</a>
-            <a href="#/rules">game rules</a>
         </div>
-        <div class="center-nav">
-            <span>Score:</span><div id="game-score"></div>
-            <span>Time Playing:</span><div id="time-playing"></div>
+        <div class="center-nav" id="score-container">
+            <span>Score:</span>
+            <div id="game-score"></div>
+            <span>Time Playing:</span>
+            <div id="time-playing"></div>
         </div>
         <div class="right-nav">
-            <a href="#/">Home</a>
-        <a href="#/about">About</a>
-        <a href="#/rules">rules</a>
-            <button id="game-rules">Game Rules</button>
+            <button id="game-rules-open">Game Rules</button>
         </div>
     </nav>
 
-    
-
     <header>
         <h1>Solitaire</h1>
-
-            
-
     </header>
 
     <main>
-        
         <div class="table-top">
             <div class="stock-pile-container">
                 <div class="stock-pile-circle"></div>
@@ -64,15 +56,15 @@
             <div id="col-6"></div>
             <div id="col-7"></div>
         </div>
-
     </main>
 
     <div>
-        <section id="splash-page">
-            <h2>Welcome!</h2>
+        <section id="splash-page" class="green-table">
+            <h1>Welcome<br>to<br>Solitaire!</h1>
+            <button id="enter-site">Enter Site</button>
         </section>
 
-        <section id="game-win-modal">
+        <section id="game-win-modal" class="modal">
             <h2>You win!</h2>
             <div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
             <sub>Time Playing: <span id="win-time">00:04:47</span></sub>
@@ -82,8 +74,76 @@
             </div>
         </section>
 
-        <section id="game-rules-modal">
-            <h2>Game Rules</h2>
+        <section id="game-rules-modal" class="modal">
+            <button id="game-rules-close">Close</button>
+            <h2>How to Play</h2>
+            <h3>Objective</h3>
+            <hr>
+            <p>
+                The goal of Klondike is to move all the cards into four foundation piles creating one pile per suit in
+                ascending order from Ace up to King.
+            </p>
+            <h4>Foundation Piles</h4>
+            <p>
+                To start a foundation pile, place an Ace in the foundation and then add cards of the same suit in
+                ascending order: A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K.
+            </p>
+            <h4>Columns</h4>
+            <p>
+                Move cards to the foundation or another column to create stacks and uncover face-down cards. Stacks must
+                alternate between red and black suits and be in descending order: K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2.
+            </p>
+            <h4>Empty Columns</h4>
+            <p>
+                Empty columns are created when you move the last card from a column. Only Kings may be moved to an empty
+                column.
+            </p>
+            <h4>Stock Pile</h4>
+            <p>
+                Click the stock pile to draw more cards. You draw one card at a time.
+            </p>
+            <h4>Drawn Cards Pile</h4>
+            <p>
+                As cards are drawn from stock pile, they are placed face up in the drawn cards pile. Move cards one at a
+                time from the drawn cards pile to an available space in a foundation pile, column, or empty column.
+            </p>
+            <h3>Scoring</h3>
+            <hr>
+            <h4>Scoring</h4>
+            <p>
+                In Standard Klondike, earn 10 points for moving cards to the foundation, and 5 points for uncovering
+                face-down cards or moving cards from the stock pile.
+            </p>
+            <h4>Bonus Points</h4>
+            <p>
+                Complete the game quickly to earn bonus points! Bonus points are calculated by dividing 700,000 by the
+                total game in seconds.
+            </p>
+            <h3>Controls</h3>
+            <hr>
+            <h4>Mouse Controls</h4>
+            <p>
+                Click and drag cards to a specific destination. To move a stack of cards, click and drag the top-most
+                card.
+            </p>
+            <h3>Interface</h3>
+            <hr>
+            <h4>New Game Button</h4>
+            <p>
+                Start a new game of Klondike.</p>
+
+            <h4>End Game Button</h4>
+            <p>
+                Ends the current game of Klondike.
+            </p>
+            <h4>Score</h4>
+            <p>
+                Displays the score for the current game.
+            </p>
+            <h4>Time</h4>
+            <p>
+                Indicates how long you have been playing the current game for.
+            </p>
         </section>
     </div>
 
@@ -96,6 +156,7 @@
         <a href="https://www.flaticon.com/free-icons/club-card" title="club card icons">Club card icons created by Md Tanvirul Haque - Flaticon</a>
         <a href="https://www.flaticon.com/free-icons/diamond-card" title="diamond card icons">Diamond card icons created by Md Tanvirul Haque - Flaticon</a> -->
     </footer>
-    
+
 </body>
+
 </html>

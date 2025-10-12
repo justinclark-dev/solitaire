@@ -11,11 +11,11 @@
 
 html {
     height: 100vh;
-    
+    scrollbar-color: green #333;
 }
 
-body {
-    font-family: Lora, Georgia, Times New Roman;
+.green-table {
+    font-family: 'Lora', Georgia, 'Times New Roman';
     text-align: center;
     background: rgb(3, 89, 3);
     color: white;
@@ -38,6 +38,10 @@ body {
     align-items: center;
     margin: 0;
     padding: 0;
+}
+
+body {
+
     
 }
 
@@ -123,6 +127,10 @@ nav .center-nav > span {
 nav .center-nav > div {
     color: lime;
     text-align: left;
+}
+
+nav #score-container {
+    display: none;
 }
 
 /************************************/
@@ -402,6 +410,16 @@ main {
     align-items: center;
     
 }
+
+.modal {
+    position: absolute;
+    justify-self: center;
+    background-color: #222;
+    border-radius: 1em;
+    box-shadow: 10px 10px 8px #222;
+
+}
+
 #game-win-modal {
     /* 
         display with javascript: 
@@ -410,21 +428,12 @@ main {
     display: none;
     grid-template-columns: 1fr;
     grid-template-rows: 50% 10% 10% 10% 20%;
-    position: absolute;
-
-    justify-self: center;
-    
     top: 400px;
-
-    background-color: #222;
     color: gold;
     height: 444px;
     width: 777px;
-    
-    /* padding: 3em; */
     border: 1px solid gold;
-    border-radius: 1em;
-    box-shadow: 10px 10px 8px #222;
+
 }
 #game-win-modal * {
     /* border: 1px solid red; */
@@ -459,21 +468,40 @@ sub {
 /************************************************/
 
 #splash-page {
-    
+    display: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
 }
 
 #game-rules-modal {
     display: none;
     flex-direction: column;
-    position: relative;
-    background-color: #777;
-    color: gold;
-    height: 444px;
-    width: 777px;
-    top: -300px;
-    padding: 3em;
-    border: 1px solid gold;
-    border-radius: 1em;
-    box-shadow: 10px 10px 8px #222;
+    padding: 4em 10em;
+    /* grid-template-columns: 1fr;
+    grid-template-rows: 100%; */
+    gap: 1em;
+    align-content: start;
+    text-align: start;
+    top: 300px;
+    color: #bbb;
+    height: 800px;
+    width: 1000px;
+    border: 1px solid green;
+    overflow-y: scroll;
+    scrollbar-color: green #333;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    font-family: system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+#game-rules-modal h3 {
+    margin-top: 2em;
 }
 
