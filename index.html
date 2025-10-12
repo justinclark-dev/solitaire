@@ -15,15 +15,23 @@
     <nav>
         <div class="left-nav">
             <button id="new-game">Start New Game</button>
+            <a href="#/win">win</a>
+            <a href="#/play">play</a>
+            <a href="#/rules">game rules</a>
         </div>
         <div class="center-nav">
             <span>Score:</span><div id="game-score"></div>
             <span>Time Playing:</span><div id="time-playing"></div>
         </div>
         <div class="right-nav">
-            <button id="deal">Game Rules</button>
+            <a href="#/">Home</a>
+        <a href="#/about">About</a>
+        <a href="#/rules">rules</a>
+            <button id="game-rules">Game Rules</button>
         </div>
     </nav>
+
+    
 
     <header>
         <h1>Solitaire</h1>
@@ -58,6 +66,26 @@
         </div>
 
     </main>
+
+    <div>
+        <section id="splash-page">
+            <h2>Welcome!</h2>
+        </section>
+
+        <section id="game-win-modal">
+            <h2>You win!</h2>
+            <div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+            <sub>Time Playing: <span id="win-time">00:04:47</span></sub>
+            <p>Score: <span id="win-score">3172</span></p>
+            <div class="btn-container">
+                <button id="win-ok">OK</button>
+            </div>
+        </section>
+
+        <section id="game-rules-modal">
+            <h2>Game Rules</h2>
+        </section>
+    </div>
 
     <div id="var-statuses"></div>
 

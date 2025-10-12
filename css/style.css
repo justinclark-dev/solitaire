@@ -66,11 +66,27 @@ h1 {
 
 button {
     padding: 0.5em 2em;
-    border: 1px #eee solid;
+    border: 1px solid #008000;
     border-radius: 4px;
-    background-color: #333;
-    color: #eee;
+    background-color: #222;
+    color: #ccc;
     height: 40px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #333333aa;
+    border: 1px solid #009000;
+    color: #ddd;
+    box-shadow: 1px 1px 3px lime;
+    
+}
+button:active {
+    position: relative;
+    transform: translateY(0.4px);
+    background-color: #333333cc;
+    border: 1px solid #007000;
+    color: #eee;
+    
 }
 
 nav {
@@ -80,6 +96,7 @@ nav {
     width: 100vw;
     margin-top: 0;
     padding: 1.5em 1em;
+    height: 5.5em;
 
 }
 
@@ -119,7 +136,7 @@ nav .center-nav > div {
     gap: 10px;
     border: 1px solid lime;
     zoom: 80%;
-    /* display: none; */
+    display: none;
 }
 #var-statuses div {
     border: 1px solid lime;
@@ -172,7 +189,7 @@ nav .center-nav > div {
 
 }
 
-main { zoom: 60%; }
+main { zoom: 75%; }
 
 #var-statuses {
     /* display: none; */
@@ -364,3 +381,99 @@ main {
     left: -5px;
     
 }
+
+/************************************************/
+
+.show {
+    display: block;
+}
+.hide {
+    display: none;
+}
+.blur {
+    backdrop-filter: blur(3px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+#game-win-modal {
+    /* 
+        display with javascript: 
+            element.display = 'grid'
+    */
+    display: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50% 10% 10% 10% 20%;
+    position: absolute;
+
+    justify-self: center;
+    
+    top: 400px;
+
+    background-color: #222;
+    color: gold;
+    height: 444px;
+    width: 777px;
+    
+    /* padding: 3em; */
+    border: 1px solid gold;
+    border-radius: 1em;
+    box-shadow: 10px 10px 8px #222;
+}
+#game-win-modal * {
+    /* border: 1px solid red; */
+}
+#game-win-modal h2 {
+    font-size: 9em;
+    font-weight: 700;
+    text-shadow: 3px 3px rgb(162, 117, 4);
+    font-family: '';
+    align-content: end;
+}
+#game-win-modal .stars {
+    font-size: 2em;
+}
+sub {
+    font-size: 1em;
+    align-content: center;
+}
+
+#game-win-modal p {
+    font-size: 2em;
+    
+}
+#game-win-modal .btn-container {
+    align-content: center;
+    
+}
+#game-win-modal button {
+    background-color: #005000;
+    
+}
+/************************************************/
+
+#splash-page {
+    
+}
+
+#game-rules-modal {
+    display: none;
+    flex-direction: column;
+    position: relative;
+    background-color: #777;
+    color: gold;
+    height: 444px;
+    width: 777px;
+    top: -300px;
+    padding: 3em;
+    border: 1px solid gold;
+    border-radius: 1em;
+    box-shadow: 10px 10px 8px #222;
+}
+

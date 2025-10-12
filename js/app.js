@@ -1,3 +1,43 @@
+///////////////////////////////////////////////////////////////
+// routing
+const main = document.querySelector('main');
+const gameWinModal = document.getElementById('game-win-modal');
+const gameRulesModal = document.getElementById('game-rules-modal');
+
+
+// get everything after the hash (#) in the url
+
+// function getHomePage() {
+//     return `<h1>Welcome Home</h1><p>This is our SPA home page.</p>`;
+// }
+// function getAboutPage() {
+//     return `<h1>About Us</h1><p>Learn about our company.</p>`;
+// }
+
+
+// const getRulesPage = () => {
+//     return `RULES PAGE`;
+// }
+
+// window.addEventListener('hashchange', () => {
+
+    
+//     const page = location.hash.slice(1) || '/';
+
+//     if (page === '/win') {
+//         //main.style.display = 'none'
+//         gameWinModal.style.display = 'grid'
+//     } else if (page === '/rules') {
+//         main.innerHTML = getAboutPage();
+//     } else {
+//         main.style.display = 'grid';
+//     }
+
+ 
+// });
+
+///////////////////////////////////////////////////////////////
+
 /*-------------------------------- Constants --------------------------------*/
 
 // const suits = ['♠', '♥', '♦', '♣'];
@@ -41,6 +81,7 @@ let movePile = [];
 
 let gameTimeStarted;
 let gameTimeStopped;
+let timeString;
 let isGameRunning = false;
 
 let gameScore = 0;
@@ -74,6 +115,8 @@ const col4Div = document.querySelector('#col-4');
 const col5Div = document.querySelector('#col-5');
 const col6Div = document.querySelector('#col-6');
 const col7Div = document.querySelector('#col-7');
+
+const winOkBtn = document.getElementById('win-ok');
 
 const varStatuses = document.querySelector('#var-statuses');
 const copyYear = document.querySelector('#year');
@@ -121,27 +164,27 @@ const dealCards = () => {
     const facedownPiles = [col2Facedown, col3Facedown, col4Facedown, col5Facedown, col6Facedown, col7Facedown];
     for (let i = 0; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        facedownPiles[i].map(c => createCard(c, columnPileDivs[i+1], 'back'));
+        facedownPiles[i].map(c => createCard(c, columnPileDivs[i + 1], 'back'));
     }
     for (let i = 1; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        createCard(facedownPiles[i][1], columnPileDivs[i+1], 'back')
+        createCard(facedownPiles[i][1], columnPileDivs[i + 1], 'back')
     }
     for (let i = 2; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        createCard(facedownPiles[i][2], columnPileDivs[i+1], 'back')
+        createCard(facedownPiles[i][2], columnPileDivs[i + 1], 'back')
     }
     for (let i = 3; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        createCard(facedownPiles[i][3], columnPileDivs[i+1], 'back')
+        createCard(facedownPiles[i][3], columnPileDivs[i + 1], 'back')
     }
     for (let i = 4; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        createCard(facedownPiles[i][4], columnPileDivs[i+1], 'back')
-    }   
+        createCard(facedownPiles[i][4], columnPileDivs[i + 1], 'back')
+    }
     for (let i = 5; i < facedownPiles.length; i++) {
         facedownPiles[i].push(stockPile.pop());
-        createCard(facedownPiles[i][5], columnPileDivs[i+1], 'back')
+        createCard(facedownPiles[i][5], columnPileDivs[i + 1], 'back')
     }
 
     // deal faceup cards
@@ -165,8 +208,8 @@ const getCardValue = (card) => {
 }
 
 const getRankSuit = (cardId) => {
-    
-    
+
+
     const charArr = [...cardId]
     const cardSuit = charArr[0]
 
@@ -186,12 +229,12 @@ const getRankSuit = (cardId) => {
 
 // handle card clicked
 const handleCardClick = (event) => {
-   // console.log('Button clicked!')
+    // console.log('Button clicked!')
     // alert('Button Clicked!')
 };
 
 const stockPileClick = (event) => {
-    
+
     if (stockPile.length > 1) {
         /*
             flip top card
@@ -201,7 +244,7 @@ const stockPileClick = (event) => {
         drawnPile.push(stockPile.pop());
 
         renderDrawnPile();
-    } else if (stockPile.length===1) {
+    } else if (stockPile.length === 1) {
         /*
             flip drawn cards pile
             move pile to stock pile
@@ -250,7 +293,7 @@ const createCard = (c, cardDiv, frontBack) => {
         div.addEventListener('drop', dropHandler);
     } else if (frontBack === 'back') {
 
-        div.setAttribute('id', 'id-'+id);
+        div.setAttribute('id', 'id-' + id);
         // div.setAttribute('id', id);
         div.classList.add('card');
         div.classList.add('xlarge');
@@ -300,7 +343,6 @@ const renderCards = () => {
 
 
 const renderTimePlaying = () => {
-
     /*
     Browser Search Assist:
 
@@ -322,7 +364,7 @@ const renderTimePlaying = () => {
         console.log(`${hours} hours, ${minutes} minutes, ${seconds} seconds`);
         This will display the elapsed time in a readable format.
     */
-   if (isGameRunning) {
+    if (isGameRunning) {
         let endTime = new Date();
         let elapsed = endTime - gameTimeStarted; // time in milliseconds
 
@@ -334,10 +376,10 @@ const renderTimePlaying = () => {
         if (minutes < 10) minutes = `0${minutes}`;
         if (hours < 10) hours = `0${hours}`;
 
-        const timeString = `${hours}:${minutes}:${seconds}`;
+        timeString = `${hours}:${minutes}:${seconds}`;
         timePlaying.innerHTML = timeString;
 
-   }
+    }
 
 
 
@@ -363,7 +405,7 @@ const newGame = (event) => {
     setInterval(renderTimePlaying, 1000);
 
 
-    
+
 }
 
 const clearGame = () => {
@@ -425,7 +467,10 @@ const clearGame = () => {
 
 }
 
-
+const closeWinModal = (event) => {
+    gameWinModal.style.display = 'none'
+}
+winOkBtn.addEventListener('click', closeWinModal);
 
 /************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
@@ -436,7 +481,7 @@ const clearGame = () => {
 
 
 const fillMovePile = (fromPile) => {
-    
+
     movePile = []
     /* 
     ChatGPT Explanation:
@@ -463,7 +508,7 @@ const fillMovePile = (fromPile) => {
 }
 
 function dragstartHandler(event) {
-    
+
     draggedFromParentId = event.target.parentElement.id;
     draggedItemId = event.target.id;
 
@@ -490,8 +535,8 @@ const getOriginationArray = (arr) => {
     switch (arr) {
         case 'drawn-pile': console.log('getOriginationArray(drawn-pile '); return drawnPile;
         case 'clubs': console.log('getOriginationArray(clubs '); return clubsPile;
-        case 'hearts': console.log('getOriginationArray(hearts' ); return heartsPile;
-        case 'diamonds': console.log('getOriginationArray(diamonds' ); return diamondsPile;
+        case 'hearts': console.log('getOriginationArray(hearts'); return heartsPile;
+        case 'diamonds': console.log('getOriginationArray(diamonds'); return diamondsPile;
         case 'spades': console.log('getOriginationArray(spades '); return spadesPile;
         case 'col-1': console.log('getOriginationArray(col1Faceup '); return col1Faceup;
         case 'col-2': console.log('getOriginationArray(col2Faceup '); return col2Faceup;
@@ -527,7 +572,7 @@ function dropHandler(event) {
     // alert('event.stopPropagation()... not stopping!')
 
     const drawnPileLenBefore = drawnPile.length;
-    
+
     const clubsPileLenBefore = clubsPile.length;
     const heartsPileLenBefore = heartsPile.length;
     const diamondsPileLenBefore = diamondsPile.length;
@@ -544,11 +589,11 @@ function dropHandler(event) {
     // 5 points for uncovering face-down cards
     // 5 points for moving cards from the stock pile
     let grantFoundationPoints = false;
-    
+
 
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
-    
+
     let draggedFrom;
     let targetId;
     let targetDiv;
@@ -559,7 +604,7 @@ function dropHandler(event) {
     console.log(draggedCardValue)
 
     // these are the rules for piles that already have cards in them
-    if (targetChild.classList.contains('card')) {    
+    if (targetChild.classList.contains('card')) {
 
         targetId = targetParent.id;
         draggedFrom = draggedFromParentId;
@@ -581,8 +626,8 @@ function dropHandler(event) {
                 // dragged and dropped card cannot be lower in rank than the card it goes on
                 if (draggedCardValue <= topCardValue) {
                     // alert('Must be next rank in accending order!')
-                    return; 
-                } 
+                    return;
+                }
                 // must be next up in chronological order
                 // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
                 // in this instance we are checking that the dropped card is one rank higher than the top card
@@ -608,7 +653,7 @@ function dropHandler(event) {
                 // dragged and dropped card cannot be higher in rank than the card it goes on
                 if (draggedCardValue >= topCardValue) {
                     return;
-                } 
+                }
                 // must be next down in chronological order
                 // e.g. 2-1=1, 5-4=1 (subracting the next lower number from any number will always equal 1)
                 // in this instance we are checking that the top card is one rank higher than the dropped card
@@ -630,7 +675,7 @@ function dropHandler(event) {
                 }
                 break;
         } // <== end switch()
-    } 
+    }
     // else: these are the rules for empty piles
     else {
         targetId = targetChild.id;
@@ -684,7 +729,7 @@ function dropHandler(event) {
         It returns the index of the first matching object (or -1 if none match).
     */
     const index = fromPile.findIndex(obj => obj.id === draggedItemId);
-    
+
     /*
     For the 2 "fromPile.splice(i, 1)[0]", the "[0]" part is a little confusing... need to review it again.
     ChatGPT Explanation
@@ -699,14 +744,14 @@ function dropHandler(event) {
             console.log(`item ${i}: ${fromPile[i]}`)
             targetDiv.appendChild(document.getElementById(fromPile[i].id));
         }
-        
+
         // removeing array items from "fromPile"
-        for (let i = index + movePile.length-1; i >= index; i--) {
+        for (let i = index + movePile.length - 1; i >= index; i--) {
             fromPile.splice(i, 1)[0]; // <== ChatGPT help*
         }
-     
+
         // adding array items to "toPile"
-        for (let i = movePile.length-1; i >= 0; i--) {
+        for (let i = movePile.length - 1; i >= 0; i--) {
             console.log(`moving movePile[i]: ${movePile[i]}`)
             toPile.push(movePile[i]);
         }
@@ -714,12 +759,12 @@ function dropHandler(event) {
         // do we still need these
         movePile = [];
         isStack = false;
-    } 
+    }
     // we are only moving a single card (not a stack)
     else {
 
         toPile.push(fromPile.splice(index, 1)[0]); // <== ChatGPT help*
-        targetDiv.appendChild(document.getElementById(draggedItemId)); 
+        targetDiv.appendChild(document.getElementById(draggedItemId));
     }
 
     // when the last faceup card is gone from a pile we automatically filp the first facedown card
@@ -731,9 +776,9 @@ function dropHandler(event) {
         case 'col-4': flipCard(col4Facedown, col4Faceup, col4Div); break;
         case 'col-5': flipCard(col5Facedown, col5Faceup, col5Div); break;
         case 'col-6': flipCard(col6Facedown, col6Faceup, col6Div); break;
-        case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;  
+        case 'col-7': flipCard(col7Facedown, col7Faceup, col7Div); break;
     }
-                
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     // SCORE
 
@@ -752,7 +797,7 @@ function dropHandler(event) {
 
     // Bonus Points
     // divide 700,000 by the total game in seconds
-    
+
     const drawnPileLenAfter = drawnPile.length;
 
     const clubsPileLenAfter = clubsPile.length;
@@ -773,7 +818,7 @@ function dropHandler(event) {
     }
 
     // grant 10 points for moving cards to the foundation
-    if (grantFoundationPoints===true) {
+    if (grantFoundationPoints === true) {
         if (clubsPileLenAfter > clubsPileLenBefore) {
             gameScore += 10;
         }
@@ -789,7 +834,7 @@ function dropHandler(event) {
     }
 
     // grant 5 points for uncovering face-down cards
-    if (grantFilpCardPoints===true) {
+    if (grantFilpCardPoints === true) {
         // col-1 never has facedown cards
         if (col2FacedownLenAfter < col2FacedownLenBefore) {
             gameScore += 5;
@@ -811,7 +856,7 @@ function dropHandler(event) {
         }
 
     }
- 
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     // DETECT WINNING GAME
     const clubsFull = clubsPile.length === 13;
@@ -819,9 +864,9 @@ function dropHandler(event) {
     const spadesFull = spadesPile.length === 13;
     const heartsFull = heartsPile.length === 13;
 
-    
+
     if (clubsFull && diamondsFull && spadesFull && heartsFull) {
-  
+
         isGameRunning = false;
 
         gameTimeStopped = new Date();
@@ -838,9 +883,17 @@ function dropHandler(event) {
 
         alert(`You win!  And it only took: ${timeString}!`)
 
+        
+        const winTime = document.getElementById('win-time');
+        const winScore = document.getElementById('win-score');
+        
+        winTime.innerText = timeString;
+        winScore.innerText = gameScore;
+        gameWinModal.style.display = 'grid';
+
     }
 
-    
+
     gameScoreDiv.innerText = gameScore;
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -848,7 +901,7 @@ function dropHandler(event) {
     renderVarStatuses();
 
     event.stopPropagation();
-    
+
 
 }
 /*************************************************************************/
