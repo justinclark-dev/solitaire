@@ -1,26 +1,10 @@
-///////////////////////////////////////////////////////////////
-// modals
-const main = document.querySelector('main');
-const gameWinModal = document.getElementById('game-win-modal');
-const gameRulesModal = document.getElementById('game-rules-modal');
-const gameRulesOpenBtn = document.getElementById('game-rules-open');
-const gameRulesCloseBtn = document.getElementById('game-rules-close');
-
-
-const splashPage = document.getElementById('splash-page');
-const enterSiteBtn = document.getElementById('enter-site');
-
-const scoreContainer = document.getElementById('score-container');
-
-
-///////////////////////////////////////////////////////////////
 
 /*-------------------------------- Constants --------------------------------*/
 
 // const suits = ['♠', '♥', '♦', '♣'];
 
 const suits = ['s', 'h', 'd', 'c'];
-const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+const ranks = ['A', '02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K'];
 
 // const suits = ['s'];
 // const ranks = ['A','K','J'];
@@ -72,18 +56,21 @@ let grantFilpCardPoints = false;
 
 /*------------------------ Cached Element References ------------------------*/
 
-
+const scoreContainer = document.getElementById('score-container');
 const gameScoreDiv = document.getElementById('game-score');
 const timePlaying = document.getElementById('time-playing');
 const newGameBtn = document.querySelector('#new-game');
+
 // stock pile container
 const stockPileDiv = document.querySelector('#stock-pile');
 const drawnPileDiv = document.querySelector('#drawn-pile');
+
 // foundation piles
 const clubsPileDiv = document.querySelector('#clubs');
 const heartsPileDiv = document.querySelector('#hearts');
 const diamondsPileDiv = document.querySelector('#diamonds');
 const spadesPileDiv = document.querySelector('#spades');
+
 // tableau section
 const col1Div = document.querySelector('#col-1');
 const col2Div = document.querySelector('#col-2');
@@ -93,10 +80,25 @@ const col5Div = document.querySelector('#col-5');
 const col6Div = document.querySelector('#col-6');
 const col7Div = document.querySelector('#col-7');
 
-const winOkBtn = document.getElementById('win-ok');
+// spash screen
+const splashPage = document.getElementById('splash-page');
+const enterSiteBtn = document.getElementById('enter-site');
 
-const varStatuses = document.querySelector('#var-statuses');
-const copyYear = document.querySelector('#year');
+// const main = document.querySelector('main');
+
+// modals
+const winOkBtn = document.getElementById('win-ok');
+const gameWinModal = document.getElementById('game-win-modal');
+const gameRulesModal = document.getElementById('game-rules-modal');
+const gameRulesOpenBtn = document.getElementById('game-rules-open');
+const gameRulesCloseBtn = document.getElementById('game-rules-close');
+
+// admin controls
+const arrayStatuses = document.querySelector('#array-statuses');
+const signature = document.getElementById('signature');
+const copyYear = document.querySelector('#copy-year');
+
+///////////////////////////////////////////////////////////////
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -240,7 +242,7 @@ const stockPileClick = (event) => {
         renderStockPile();
     }
     // for testing
-    renderVarStatuses()
+    renderArrayStatuses()
 }
 
 
@@ -310,7 +312,7 @@ const renderCards = () => {
     renderDrawnPile();
 
     // for testing
-    renderVarStatuses();
+    renderArrayStatuses();
 }
 
 
@@ -469,6 +471,76 @@ const closeSplashPage = (event) => {
 enterSiteBtn.addEventListener('click', closeSplashPage);
 
 
+const toggleArrayStatuses = (event) => {
+    if (arrayStatuses.style.display === 'none' || !arrayStatuses.style.display) {
+        arrayStatuses.style.display = 'flex'
+        col2Div.classList.add('grow')
+        col3Div.classList.add('grow')
+        col4Div.classList.add('grow')
+        col5Div.classList.add('grow')
+        col6Div.classList.add('grow')
+        col7Div.classList.add('grow')
+    } else {
+        arrayStatuses.style.display = 'none';
+        col1Div.classList.remove('grow')
+        col2Div.classList.remove('grow')
+        col3Div.classList.remove('grow')
+        col4Div.classList.remove('grow')
+        col5Div.classList.remove('grow')
+        col6Div.classList.remove('grow')
+        col7Div.classList.remove('grow')
+    }
+}
+copyYear.addEventListener('click', toggleArrayStatuses);
+
+const toggleWin = (event) => {
+    
+    clearGame();
+    createDeck();
+    
+    isGameRunning = true;
+    gameTimeStarted = new Date();
+    setInterval(renderTimePlaying, 1000);
+
+    gameScoreDiv.innerHTML = '0';
+    scoreContainer.style.display = 'flex';
+
+    // CANNOT CHANGE ORDER BELOW
+    // spades
+    for (let i = 0; i < 12; i++) {
+        spadesPile.push(deck.shift());
+    }
+    col7Faceup.push(deck.shift());
+    createCard(spadesPile[11], spadesPileDiv, 'front')
+    createCard(col7Faceup[0], col7Div, 'front')
+    // hearts
+    for (let i = 0; i < 12; i++) {
+        heartsPile.push(deck.shift());
+    }
+    col5Faceup.push(deck.shift());
+    createCard(heartsPile[11], heartsPileDiv, 'front')
+    createCard(col5Faceup[0], col5Div, 'front')
+    // diamonds
+    for (let i = 0; i < 12; i++) {
+        diamondsPile.push(deck.shift());
+    }
+    col6Faceup.push(deck.shift());
+    createCard(diamondsPile[11], diamondsPileDiv, 'front')
+    createCard(col6Faceup[0], col6Div, 'front')
+    // clubs
+    for (let i = 0; i < 12; i++) {
+        clubsPile.push(deck.shift());
+    }
+    col4Faceup.push(deck.shift());
+    createCard(clubsPile[11], clubsPileDiv, 'front')
+    createCard(col4Faceup[0], col4Div, 'front')
+    // CANNOT CHANGE ORDER ABOVE
+
+    renderArrayStatuses();
+
+}
+signature.addEventListener('click', toggleWin);
+
 /************************************************************************* */
 // TODO: look into hiding dragged element's original location until dropped in new location.
 // This is a start: https://stackoverflow.com/questions/36379184/html5-draggable-hide-original-element
@@ -506,8 +578,6 @@ const fillMovePile = (fromPile) => {
 
 function dragstartHandler(event) {
 
-    
-
     draggedFromParentId = event.target.parentElement.id;
     draggedItemId = event.target.id;
 
@@ -530,7 +600,7 @@ function dragstartHandler(event) {
             break
     }
 
-    renderVarStatuses();
+    renderArrayStatuses();
 }
 
 function dragoverHandler(event) {
@@ -592,11 +662,7 @@ const dropHandler = (event) => {
     const col6FacedownLenBefore = col6Facedown.length;
     const col7FacedownLenBefore = col7Facedown.length;
 
-    // 10 points for moving cards to the foundation
-    // 5 points for uncovering face-down cards
-    // 5 points for moving cards from the stock pile
     let grantFoundationPoints = false;
-
 
     const targetParent = event.target.parentElement;
     const targetChild = event.target;
@@ -609,9 +675,6 @@ const dropHandler = (event) => {
     const draggedCardValue = getCardValue(draggedCardObj);
 
     console.log(draggedCardValue)
-
-
-
 
     // these are the rules for piles that already have cards in them
     if (targetChild.classList.contains('card')) {
@@ -629,6 +692,7 @@ const dropHandler = (event) => {
         switch (targetId) {
             case 'drawn-pile':
                 // don't allow dropping cards back to drawn-pile
+                alert('You can\'t do that any more!')
                 return
             // foundation piles
             case 'clubs':
@@ -666,6 +730,7 @@ const dropHandler = (event) => {
                 const toPileDestination = getDestinationArray(targetId);
                 const bottomCard = toPileDestination[toPileDestination.length-1];
                 if (targetChild.id !== bottomCard.id) {
+                    alert('You can only drop on the last card of the stack!')
                     return;
                 }
                 // enforce rank descending order
@@ -800,23 +865,6 @@ const dropHandler = (event) => {
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // SCORE
-
-    /*
-        In Standard Klondike, earn 10 points for moving cards to the foundation, 
-        and 5 points for uncovering face-down cards or moving cards from the stock pile.
-
-        Bonus Points
-        Complete the game quickly to earn bonus points! Bonus points are calculated by 
-        dividing 700,000 by the total game in seconds.
-    */
-
-    // 10 points for moving cards to the foundation
-    // 5 points for uncovering face-down cards
-    // 5 points for moving cards from the stock pile
-
-    // Bonus Points
-    // divide 700,000 by the total game in seconds
-
     const drawnPileLenAfter = drawnPile.length;
 
     const clubsPileLenAfter = clubsPile.length;
@@ -838,41 +886,21 @@ const dropHandler = (event) => {
 
     // grant 10 points for moving cards to the foundation
     if (grantFoundationPoints === true) {
-        if (clubsPileLenAfter > clubsPileLenBefore) {
-            gameScore += 10;
-        }
-        if (heartsPileLenAfter > heartsPileLenBefore) {
-            gameScore += 10;
-        }
-        if (diamondsPileLenAfter > diamondsPileLenBefore) {
-            gameScore += 10;
-        }
-        if (spadesPileLenAfter > spadesPileLenBefore) {
-            gameScore += 10;
-        }
+        if (clubsPileLenAfter > clubsPileLenBefore) gameScore += 10;
+        if (heartsPileLenAfter > heartsPileLenBefore) gameScore += 10;
+        if (diamondsPileLenAfter > diamondsPileLenBefore) gameScore += 10;
+        if (spadesPileLenAfter > spadesPileLenBefore) gameScore += 10;
     }
 
     // grant 5 points for uncovering face-down cards
     if (grantFilpCardPoints === true) {
         // col-1 never has facedown cards
-        if (col2FacedownLenAfter < col2FacedownLenBefore) {
-            gameScore += 5;
-        }
-        if (col3FacedownLenAfter < col3FacedownLenBefore) {
-            gameScore += 5;
-        }
-        if (col4FacedownLenAfter < col4FacedownLenBefore) {
-            gameScore += 5;
-        }
-        if (col5FacedownLenAfter < col5FacedownLenBefore) {
-            gameScore += 5;
-        }
-        if (col6FacedownLenAfter < col6FacedownLenBefore) {
-            gameScore += 5;
-        }
-        if (col7FacedownLenAfter < col7FacedownLenBefore) {
-            gameScore += 5;
-        }
+        if (col2FacedownLenAfter < col2FacedownLenBefore) gameScore += 5;
+        if (col3FacedownLenAfter < col3FacedownLenBefore) gameScore += 5;
+        if (col4FacedownLenAfter < col4FacedownLenBefore) gameScore += 5;
+        if (col5FacedownLenAfter < col5FacedownLenBefore) gameScore += 5;
+        if (col6FacedownLenAfter < col6FacedownLenBefore) gameScore += 5;
+        if (col7FacedownLenAfter < col7FacedownLenBefore) gameScore += 5;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -911,11 +939,13 @@ const dropHandler = (event) => {
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     // for testing
-    renderVarStatuses();
+    renderArrayStatuses();
 
+    // TODO: this doesn't work as expected, need to look into deeper:
     event.stopPropagation();
 
 }
+
 /*************************************************************************/
 
 const flipCard = (fromPile, toPile, colDiv) => {
@@ -949,34 +979,34 @@ const getArrayItems = (arr, arrName) => {
     return divText;
 }
 
-const renderVarStatuses = () => {
+const renderArrayStatuses = () => {
 
-    varStatuses.innerHTML = '';
+    arrayStatuses.innerHTML = '';
 
-    varStatuses.innerHTML += getArrayItems(stockPile, 'stockPile');
-    varStatuses.innerHTML += getArrayItems(drawnPile, 'drawnPile');
+    arrayStatuses.innerHTML += getArrayItems(stockPile, 'stockPile');
+    arrayStatuses.innerHTML += getArrayItems(drawnPile, 'drawnPile');
 
-    varStatuses.innerHTML += getArrayItems(clubsPile, 'clubsPile');
-    varStatuses.innerHTML += getArrayItems(heartsPile, 'heartsPile');
-    varStatuses.innerHTML += getArrayItems(diamondsPile, 'diamondsPile');
-    varStatuses.innerHTML += getArrayItems(spadesPile, 'spadesPile');
+    arrayStatuses.innerHTML += getArrayItems(clubsPile, 'clubsPile');
+    arrayStatuses.innerHTML += getArrayItems(heartsPile, 'heartsPile');
+    arrayStatuses.innerHTML += getArrayItems(diamondsPile, 'diamondsPile');
+    arrayStatuses.innerHTML += getArrayItems(spadesPile, 'spadesPile');
 
-    varStatuses.innerHTML += getArrayItems(col1Faceup, 'col1Faceup');
-    varStatuses.innerHTML += getArrayItems(col2Faceup, 'col2Faceup');
-    varStatuses.innerHTML += getArrayItems(col3Faceup, 'col3Faceup');
-    varStatuses.innerHTML += getArrayItems(col4Faceup, 'col4Faceup');
-    varStatuses.innerHTML += getArrayItems(col5Faceup, 'col5Faceup');
-    varStatuses.innerHTML += getArrayItems(col6Faceup, 'col6Faceup');
-    varStatuses.innerHTML += getArrayItems(col7Faceup, 'col7Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col1Faceup, 'col1Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col2Faceup, 'col2Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col3Faceup, 'col3Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col4Faceup, 'col4Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col5Faceup, 'col5Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col6Faceup, 'col6Faceup');
+    arrayStatuses.innerHTML += getArrayItems(col7Faceup, 'col7Faceup');
 
-    varStatuses.innerHTML += getArrayItems(col2Facedown, 'col2Facedown');
-    varStatuses.innerHTML += getArrayItems(col3Facedown, 'col3Facedown');
-    varStatuses.innerHTML += getArrayItems(col4Facedown, 'col4Facedown');
-    varStatuses.innerHTML += getArrayItems(col5Facedown, 'col5Facedown');
-    varStatuses.innerHTML += getArrayItems(col6Facedown, 'col6Facedown');
-    varStatuses.innerHTML += getArrayItems(col7Facedown, 'col7Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col2Facedown, 'col2Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col3Facedown, 'col3Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col4Facedown, 'col4Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col5Facedown, 'col5Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col6Facedown, 'col6Facedown');
+    arrayStatuses.innerHTML += getArrayItems(col7Facedown, 'col7Facedown');
 
-    varStatuses.innerHTML += getArrayItems(movePile, 'movePile');
+    arrayStatuses.innerHTML += getArrayItems(movePile, 'movePile');
 }
 /* ********************************************************** */
 
