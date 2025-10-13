@@ -44,6 +44,9 @@ header {
     display: flex;
     align-items: center;
 }
+#copy-right {
+    cursor: pointer;
+}
 #copy-year {
     cursor: pointer;
 }
